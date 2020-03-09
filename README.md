@@ -22,13 +22,14 @@ $ aws ecr create-repository --repository-name myproject-customer-service
 - Prepare DynamoDB table using https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
 
 ## Usage
-- Clone CodeCommit Repository
+- Clone CodeCommit Repository and navigate to working directory
 ```bash
 $ cd ~/environment
 $ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproject-customer-service-python
+$ cd ~/environment/myproject-customer-service-python
 ```
 
-- Prepare folder structure
+- Follow folder structure
 ```
 ~/environment/myproject-customer-service-python
 ├── app.py
@@ -42,72 +43,45 @@ $ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproje
 └── .gitignore
 ```
 
-- Add .gitignore file
+- Activate virtual environment, install flask and flask-cors
 ```bash
-$ cd ~/environment/myproject-customer-service-python
-$ touch .gitignore
-```
-
-- Navigate to working directory
-```bash
-$ cd ~/environment/myproject-customer-service-python
 $ python3 -m venv venv
 $ source venv/bin/activate
 $ venv/bin/pip install flask
 $ venv/bin/pip install flask-cors
 ```
 
-- Prepare static database for testing
+- Add .gitignore file ~/environment/myproject-customer-service-python/.gitignore
+- Add static database ~/environment/myproject-customer-service-python/customers.json
+- Add customer routes ~/environment/myproject-customer-service-python/customer_routes.py
+- Add app             ~/environment/myproject-customer-service-python/app.py
+- Add custom logger   ~/environment/myproject-customer-service-python/custom_logger.py
+- Generate requirements.txt
 ```bash
-$ cd ~/environment/myproject-customer-service-python
-$ touch customers.json
+$ pip freeze > requirements.txt
 ```
 
-- Add customer_routes.py
-```bash
-$ cd ~/environment/myproject-customer-service-python
-$ touch customer_routes.py
-```
+- (To Do) Add Unit Testing
 
-- Add app.py
+- Run locally before dockerizing
 ```bash
-$ cd ~/environment/myproject-customer-service-python
-$ vi app.py
-```
-
-- Add custom_logger.py
-```bash
-$ cd ~/environment/myproject-customer-service-python
-$ vi custom_logger.py
-```
-
-- Run locally and test
-```bash
-$ cd ~/environment/myproject-customer-service-python
 $ python app.py
 $ curl http://localhost:5000
 ```
 
-- Generate requirements.txt
-```bash
-$ cd ~/environment/myproject-customer-service-python
-$ pip freeze > requirements.txt
-```
+- Test using curl scripts ~/environment/myproject-customer-service-python/curl_scripts.md
 
-- Create the Docker file
-```bash
-$ cd ~/environment/myproject-customer-service-python
-$ touch Dockerfile
-```
+- Add Docker File ~/environment/myproject-customer-service-python/Dockerfile
 
 - Build, Tag and Run the Docker Image locally. Replace AccountId and Region
 ```bash
 $ docker build -t myproject-customer-service .
-$ docker tag myproject-customer-service:latest 707538076348.dkr.ecr.ap-southeast-1.amazonaws.com/myproject-customer-service:latest
+$ docker tag myproject-customer-service:latest 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
 $ docker run -p 5000:5000 myproject-customer-service:latest
 ```
 
-### User Acceptance Testing
+- Test using curl scripts ~/environment/myproject-customer-service-python/curl_scripts.md
+
 - Test Get all Customers
 ```bash
 curl -X GET \
@@ -153,9 +127,6 @@ curl -X DELETE \
   -H 'Content-Type: application/json'
 ```
 
-### (To Do) Unit Testing
-
-### Deployment
 - Deploy to ECR
 ```bash
 $ $(aws ecr get-login --no-include-email)
