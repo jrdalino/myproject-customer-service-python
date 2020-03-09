@@ -37,7 +37,11 @@ $ cd ~/environment/myproject-customer-service-python
 ├── custom_logger.py
 ├── customer_routes.py
 ├── customers.json
+├── kubernetes/
+│   ├── deployment.yml
+│   └── service.yml
 ├── requirements.txt
+├── test_customer_routes.py
 ├── venv/
 ├── Dockerfile
 ├── README.md
@@ -63,7 +67,7 @@ $ venv/bin/pip install flask-cors
 $ pip freeze > requirements.txt
 ```
 
-- (To Do) Add Unit Testing
+- (To Do) Add Unit Testing ~/environment/myproject-customer-service-python/test_customer_routes.py
 
 - Run locally before dockerizing
 ```bash
@@ -90,6 +94,8 @@ $ $(aws ecr get-login --no-include-email)
 $ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
 $ aws ecr describe-images --repository-name myproject-customer-service
 ```
+
+- Add Kubernetes Deployment and Service Yaml files ~/environment/myproject-customer-service-python/kubernetes/deployment.yml and ~/environment/myproject-customer-service-python/kubernetes/service.yml
 
 - Make changes, commit and push changes to CodeCommit repository to trigger codepipeline deployment to EKS
 ```bash
