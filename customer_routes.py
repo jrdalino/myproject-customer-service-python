@@ -82,7 +82,6 @@ def create_customer():
 
     return resp
 
-
 @customer_module.route("/customers/<customer_id>", methods=['PUT'])
 def update_customer(customer_id):
     

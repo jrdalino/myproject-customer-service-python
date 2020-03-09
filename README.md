@@ -37,6 +37,7 @@ $ cd ~/environment/myproject-customer-service-python
 ```
 ~/environment/myproject-customer-service-python
 ├── app.py
+├── buildspec.yml
 ├── custom_logger.py
 ├── customer_routes.py
 ├── customers.json
@@ -116,10 +117,10 @@ $ aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws ia
 
 - Create k8s Deployment and Service
 ```
-$ cd ~/environment/calculator-backend/kubernetes
+$ cd ~/environment/myproject-customer-service-python/kubernetes
 $ kubectl apply -f deployment.yaml
 $ kubectl apply -f service.yaml
-$ kubectl get deployment calculator-backend
+$ kubectl get deployment myproject-customer-service
 ```
 
 ## Automatic Deployment
@@ -133,13 +134,13 @@ $ git push origin master
 - Scale the service
 ```
 $ kubectl get deployments
-$ kubectl scale deployment calculator-backend --replicas=1
+$ kubectl scale deployment myproject-customer-service --replicas=1
 $ kubectl get deployments
 ```
 
 - Find the Service Address
 ```
-$ kubectl get service calculator-backend -o wide
+$ kubectl get service myproject-customer-service -o wide
 ```
 
 - Test using curl scripts ~/environment/myproject-customer-service-python/curl_scripts.md
