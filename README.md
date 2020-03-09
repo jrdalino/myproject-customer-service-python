@@ -95,6 +95,8 @@ $ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-custom
 $ aws ecr describe-images --repository-name myproject-customer-service
 ```
 
+- Add Buildspec Yaml file ~/environment/myproject-customer-service-python/buildspec.yml
+
 - Add Kubernetes Deployment and Service Yaml files ~/environment/myproject-customer-service-python/kubernetes/deployment.yml and ~/environment/myproject-customer-service-python/kubernetes/service.yml
 
 - Make changes, commit and push changes to CodeCommit repository to trigger codepipeline deployment to EKS
