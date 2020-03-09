@@ -1,0 +1,26 @@
+[
+  {
+    "customerId": "123456789001",
+    "customerFirstName": "Barnie",
+    "customerLastName": "Whittam",
+    "customerEmail": "bwhittam0@cpanel.net",
+    "customerDoB" : "December 31, 1999",
+    "customerGender" : "Male"
+  },
+  {
+    "customerId": "123456789002",
+    "customerFirstName": "Emelyne",
+    "customerLastName": "Plumley",
+    "customerEmail": "eplumley1@wikipedia.org",
+    "customerDoB" : "January 1, 2000",
+    "customerGender" : "Female"
+  },
+  {
+    "customerId": "123456789003",
+    "customerFirstName": "Linoel",
+    "customerLastName": "Dafter",
+    "customerEmail": "ldafter2@ucsd.edu",
+    "customerDoB" : "June 15, 1980",
+    "customerGender" : "Male"
+  }  
+]
