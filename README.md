@@ -33,8 +33,8 @@ $ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproje
 ~/environment/myproject-customer-service-python
 ├── app.py
 ├── custom_logger.py
-├── product_routes.py
-├── products.json
+├── customer_routes.py
+├── customers.json
 ├── requirements.txt
 ├── venv/
 ├── Dockerfile
