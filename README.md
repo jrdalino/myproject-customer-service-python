@@ -26,7 +26,7 @@ $ aws ecr create-repository --repository-name myproject-customer-service
 - Clone CodeCommit Repository and navigate to working directory
 ```bash
 $ cd ~/environment
-$ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproject-customer-service-python
+$ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproject-customer-service
 $ cd ~/environment/myproject-customer-service-python
 ```
 
@@ -56,6 +56,7 @@ $ source venv/bin/activate
 (venv) $ venv/bin/pip install flask
 (venv) $ venv/bin/pip install flask-cors
 ```
+
 - To deactivate
 ```bash
 (venv) $ deactivate
