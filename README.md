@@ -12,6 +12,7 @@
 ```
 
 ## Prerequisites
+- Docker, Python, Flask, Git, Virtualenv https://github.com/jrdalino/development-environment-setup
 - Setup CI/CD using https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform. This will create CodeCommit Repo, ECR Repo, CodeBuild Project, Lambda Function and CodePipeline Pipeline 
 - You may also create the repositories individually
 ```bash
