@@ -66,7 +66,7 @@ $ touch customers.json
 - Add customer_routes.py
 ```bash
 $ cd ~/environment/myproject-customer-service-python
-$ touch product_routes.py
+$ touch customer_routes.py
 ```
 
 - Add app.py
@@ -88,8 +88,6 @@ $ python app.py
 $ curl http://localhost:5000
 ```
 
-
-
 - Generate requirements.txt
 ```bash
 $ cd ~/environment/myproject-customer-service-python
@@ -105,41 +103,41 @@ $ touch Dockerfile
 - Build, Tag and Run the Docker Image locally. Replace AccountId and Region
 ```bash
 $ docker build -t myproject-customer-service .
-$ docker tag myproject-product-restapi:latest 707538076348.dkr.ecr.ap-southeast-1.amazonaws.com/myproject-customer-service:latest
+$ docker tag myproject-customer-service:latest 707538076348.dkr.ecr.ap-southeast-1.amazonaws.com/myproject-customer-service:latest
 $ docker run -p 5000:5000 myproject-customer-service:latest
 ```
 
 ### User Acceptance Testing
-- Test Get all Products
+- Test Get all Customers
 ```bash
 curl -X GET \
-  http://localhost:5000/products \
+  http://localhost:5000/customers \
   -H 'Host: localhost:5000'
 ```
 
-- Test Get Product
+- Test Get Customer
 ```bash
 curl -X GET \
-  http://localhost:5000/products/4e53920c-505a-4a90-a694-b9300791f0ae \
+  http://localhost:5000/customers/4e53920c-505a-4a90-a694-b9300791f0ae \
   -H 'Host: localhost:5000' 
 ```
 
-- Test Create Product
+- Test Create Customer
 ```bash
 curl -X POST \
-  http://localhost:5000/products \
+  http://localhost:5000/customers \
   -H 'Content-Type: application/json' \
   -d '{
   "name":"Product G",
-  "description": "Nulla nec dolor a ipsum viverra tincidunt eleifend id orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
+  "description": "Nulla nec",
   "image_url": "https://via.placeholder.com/200"
 }'
 ```
 
-- Test Update Product
+- Test Update Customer
 ```bash
 curl -X PUT \
-  http://localhost:5000/products/4e53920c-505a-4a90-a694-b9300791f0ae \
+  http://localhost:5000/customers/4e53920c-505a-4a90-a694-b9300791f0ae \
   -H 'Content-Type: application/json' \
   -d '{
   "name":"egg 123",
@@ -148,11 +146,11 @@ curl -X PUT \
 }'
 ```
 
-- Test Delete Product
+- Test Delete Customer
 ```bash
 curl -X DELETE \
-  http://localhost:5000/products/4e53920c-505a-4a90-a694-b9300791f0ae \
-  -H 'Content-Type: application/json' 
+  http://localhost:5000/customers/4e53920c-505a-4a90-a694-b9300791f0ae \
+  -H 'Content-Type: application/json'
 ```
 
 ### (To Do) Unit Testing
@@ -165,14 +163,13 @@ $ $(aws ecr get-login --no-include-email)
 
 - Push our Docker Image and validate
 ```bash
-$ docker push 707538076348.dkr.ecr.ap-southeast-1.amazonaws.com/myproject-product-restapi:latest
-$ aws ecr describe-images --repository-name myproject-product-restapi
+$ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
+$ aws ecr describe-images --repository-name myproject-customer-service
 ```
 
 ### (Optional) Clean up
 ```bash
-$ aws ecr delete-repository --repository-name myproject-product-restapi --force
-$ aws codecommit delete-repository --repository-name myproject-product-restapi
-$ rm -rf ~/environment/myproject-product-restapi
+$ aws ecr delete-repository --repository-name myproject-customer-service --force
+$ aws codecommit delete-repository --repository-name myproject-customer-service
+$ rm -rf ~/environment/myproject-customer-service
 ```
-
