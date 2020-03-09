@@ -73,7 +73,7 @@ $ curl http://localhost:5000
 
 - Add Docker File ~/environment/myproject-customer-service-python/Dockerfile
 
-- Build, Tag and Run the Docker Image locally. Replace AccountId and Region
+- Build, Tag and Run the Docker Image locally. (Replace AccountId and Region)
 ```bash
 $ docker build -t myproject-customer-service .
 $ docker tag myproject-customer-service:latest 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
@@ -88,6 +88,15 @@ $ $(aws ecr get-login --no-include-email)
 $ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
 $ aws ecr describe-images --repository-name myproject-customer-service
 ```
+
+- Make changes, commit and push changes to CodeCommit repository to trigger codepipeline deployment to EKS
+```bash
+$ git add .
+$ git commit -m "Initial Commit"
+$ git push origin master
+```
+
+- Test using curl scripts ~/environment/myproject-customer-service-python/curl_scripts.md
 
 ## (Optional) Clean up
 ```bash
