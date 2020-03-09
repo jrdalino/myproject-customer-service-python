@@ -1,5 +1,8 @@
 # myproject-customer-service-python
 
+## Functional Requirements
+- Create, Read, Update, Delete, and List Customers
+
 ## API Endpoints
 ```
 | HTTP METHOD | URI                                      | ACTION                       |
