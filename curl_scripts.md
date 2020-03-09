@@ -1,4 +1,4 @@
-- Test Get all Customers
+- Test Get All Customers
 ```bash
 curl -X GET \
   http://localhost:5000/customers \

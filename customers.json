@@ -1,26 +1,26 @@
 [
   {
-    "customerId": "123456789001",
-    "customerFirstName": "Barnie",
-    "customerLastName": "Whittam",
-    "customerEmail": "bwhittam0@cpanel.net",
-    "customerDoB" : "December 31, 1999",
-    "customerGender" : "Male"
+    "customer_id": "4e53920c-505a-4a90-a694-b9300791f0ae",
+    "customer_first_name": "Barnie",
+    "customer_last_name": "Whittam",
+    "customer_email": "bwhittam0@cpanel.net",
+    "customer_dob" : "December 31, 1999",
+    "customer_gender" : "Male"
   },
   {
-    "customerId": "123456789002",
-    "customerFirstName": "Emelyne",
-    "customerLastName": "Plumley",
-    "customerEmail": "eplumley1@wikipedia.org",
-    "customerDoB" : "January 1, 2000",
-    "customerGender" : "Female"
+    "customer_id": "2b473002-36f8-4b87-954e-9a377e0ccbec",
+    "customer_first_name": "Emelyne",
+    "customer_last_name": "Plumley",
+    "customer_email": "eplumley1@wikipedia.org",
+    "customer_dob" : "January 1, 2000",
+    "customer_gender" : "Female"
   },
   {
-    "customerId": "123456789003",
-    "customerFirstName": "Linoel",
-    "customerLastName": "Dafter",
-    "customerEmail": "ldafter2@ucsd.edu",
-    "customerDoB" : "June 15, 1980",
-    "customerGender" : "Male"
+    "customer_id": "3f0f196c-4a7b-43af-9e29-6522a715342d",
+    "customer_first_name": "Linoel",
+    "customer_last_name": "Dafter",
+    "customer_email": "ldafter2@ucsd.edu",
+    "customer_dob" : "June 15, 1980",
+    "customer_gender" : "Male"
   }  
 ]

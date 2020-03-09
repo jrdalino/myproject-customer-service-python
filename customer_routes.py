@@ -6,27 +6,27 @@ from custom_logger import setup_logger
 
 # Set up the custom logger and the Blueprint
 logger = setup_logger(__name__)
-product_module = Blueprint('products', __name__)
+customer_module = Blueprint('customers', __name__)
 
-logger.info("Intialized product routes")
+logger.info("Intialized customer routes")
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-my_file = os.path.join(THIS_FOLDER, 'products.json')
+my_file = os.path.join(THIS_FOLDER, 'customers.json')
 
-# load products static db from json file
+# load customers static db from json file
 with open(my_file) as f:
-    products = json.load(f)
+    customers = json.load(f)
 
 # Allow the default route to return a health check
-@product_module.route('/')
+@customer_module.route('/')
 def health_check():
-    return "This a health check. Product Management Service is up and running."
+    return "This a health check. Customer Management Service is up and running."
 
-@product_module.route('/products')
-def get_all_products():
+@customer_module.route('/customers')
+def get_all_customers():
     
     try:
-        serviceResponse = json.dumps({'products': products})
+        serviceResponse = json.dumps({'customers': customers})
     except Exception as e:
         logger.error(e)
         abort(404)
@@ -36,13 +36,13 @@ def get_all_products():
     
     return resp
     
-@product_module.route("/products/<string:product_id>", methods=['GET'])
-def get_product(product_id):
+@customer_module.route("/customers/<string:customer_id>", methods=['GET'])
+def get_customer(customer_id):
     
-    product = [p for p in products if p['product_id'] == product_id]
+    customer = [p for p in customers if p['customer_id'] == customer_id]
 
     try:
-        serviceResponse = json.dumps({'products': product[0]})
+        serviceResponse = json.dumps({'customers': customer[0]})
     except Exception as e:
         logger.error(e)
         abort(404)
@@ -52,23 +52,23 @@ def get_product(product_id):
 
     return resp
 
-@product_module.route("/products", methods=['POST'])
-def create_product():
+@customer_module.route("/customers", methods=['POST'])
+def create_customer():
 
     try:
-        product_dict = json.loads(request.data)
+        customer_dict = json.loads(request.data)
 
-        product = {
-            'product_id': str(uuid.uuid4()),
-            'name': product_dict['name'],
-            'description': product_dict['description'],
-            'image_url': product_dict['image_url']
+        customer = {
+            'customer_id': str(uuid.uuid4()),
+            'name': customer_dict['name'],
+            'description': customer_dict['description'],
+            'image_url': customer_dict['image_url']
         }
 
-        products.append(product)
+        customers.append(customer)
 
         serviceResponse = json.dumps({
-                'products': product,
+                'customers': customer,
                 'status': 'CREATED OK'
                 })
 
@@ -83,27 +83,27 @@ def create_product():
     return resp
 
 
-@product_module.route("/products/<product_id>", methods=['PUT'])
-def update_product(product_id):
+@customer_module.route("/customers/<customer_id>", methods=['PUT'])
+def update_customer(customer_id):
     
     try:
-        #creates a new product. The product id is automatically generated.
-        product_dict = json.loads(request.data)
+        #creates a new customer. The customer id is automatically generated.
+        customer_dict = json.loads(request.data)
         
-        product = [p for p in products if p['product_id'] == product_id]
+        customer = [p for p in customers if p['customer_id'] == customer_id]
 
-        product[0]['name'] = request.json.get('name', product[0]['name'])
-        product[0]['description'] = request.json.get('description', product[0]['description'])
-        product[0]['image_url'] = request.json.get('image_url', product[0]['image_url'])
+        customer[0]['name'] = request.json.get('name', customer[0]['name'])
+        customer[0]['description'] = request.json.get('description', customer[0]['description'])
+        customer[0]['image_url'] = request.json.get('image_url', customer[0]['image_url'])
         
-        product = {
-            'name': request.json.get('name', product[0]['name']), 
-            'description' : request.json.get('description', product[0]['description']),
-            'image_url' : request.json.get('image_url', product[0]['image_url'])
+        customer = {
+            'name': request.json.get('name', customer[0]['name']), 
+            'description' : request.json.get('description', customer[0]['description']),
+            'image_url' : request.json.get('image_url', customer[0]['image_url'])
         }
 
         serviceResponse = json.dumps({
-                'products': product,
+                'customers': customer,
                 'status': 'UPDATED OK'
                 })
 
@@ -116,18 +116,18 @@ def update_product(product_id):
 
     return resp
 
-@product_module.route("/products/<product_id>", methods=['DELETE'])
-def delete_product(product_id):
+@customer_module.route("/customers/<customer_id>", methods=['DELETE'])
+def delete_customer(customer_id):
     try:
-        product = [p for p in products if p['product_id'] == product_id]
+        customer = [p for p in customers if p['customer_id'] == customer_id]
 
-        #deletes a product given its id.
+        #deletes a customer given its id.
         serviceResponse = json.dumps({
-                'products' : product,
+                'customers' : customer,
                 'status': 'DELETED OK'
             })
 
-        products.remove(product[0])
+        customers.remove(customer[0])
 
     except Exception as e:
         logger.error(e)
@@ -138,12 +138,12 @@ def delete_product(product_id):
 
     return resp
 
-@product_module.errorhandler(404)
+@customer_module.errorhandler(404)
 def item_not_found(e):
     # note that we set the 404 status explicitly
-    return json.dumps({'error': 'Product not found'}), 404
+    return json.dumps({'error': 'Customer not found'}), 404
 
-@product_module.errorhandler(400)
+@customer_module.errorhandler(400)
 def bad_request(e):
     # note that we set the 400 status explicitly
     return json.dumps({'error': 'Bad request'}), 400
