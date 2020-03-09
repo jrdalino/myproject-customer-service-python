@@ -52,8 +52,13 @@ $ cd ~/environment/myproject-customer-service-python
 ```bash
 $ python3 -m venv venv
 $ source venv/bin/activate
-$ venv/bin/pip install flask
-$ venv/bin/pip install flask-cors
+(venv) $
+(venv) $ venv/bin/pip install flask
+(venv) $ venv/bin/pip install flask-cors
+```
+- To deactivate
+```bash
+(venv) $ deactivate
 ```
 
 - Add .gitignore file ~/environment/myproject-customer-service-python/.gitignore
