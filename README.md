@@ -12,13 +12,23 @@
 ```
 
 ## Prerequisites
-- Setup CI/CD using https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform
-- This will create CodeCommit Repo, ECR Repo, CodeBuild Project, Lambda Function and CodePipeline Pipeline 
+- Setup CI/CD using https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform. This will create CodeCommit Repo, ECR Repo, CodeBuild Project, Lambda Function and CodePipeline Pipeline 
+- You may also create the repositories individually
+
+```bash
+$ aws codecommit create-repository --repository-name myproject-customer-service
+```
 
 ## Usage
+- Clone CodeCommit Repository
+```bash
+$ cd ~/environment
+$ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproject-customer-service-python
+```
+
 - Prepare folder structure
 ```
-~/environment/myproject-product-restapi
+~/environment/myproject-customer-service-python
 ├── app.py
 ├── custom_logger.py
 ├── product_routes.py
