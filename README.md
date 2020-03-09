@@ -71,7 +71,7 @@ $ source venv/bin/activate
 - Add app             ~/environment/myproject-customer-service-python/app.py
 - Add custom logger   ~/environment/myproject-customer-service-python/custom_logger.py
 - Add README.md file  ~/environment/myproject-customer-service-python/README.md
-- Generate requirements.txt
+- Generate            ~/environment/myproject-customer-service-python/requirements.txt
 ```bash
 $ pip freeze > requirements.txt
 ```
