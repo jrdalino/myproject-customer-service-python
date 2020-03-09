@@ -14,10 +14,12 @@
 ## Prerequisites
 - Setup CI/CD using https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform. This will create CodeCommit Repo, ECR Repo, CodeBuild Project, Lambda Function and CodePipeline Pipeline 
 - You may also create the repositories individually
-
 ```bash
 $ aws codecommit create-repository --repository-name myproject-customer-service
+$ aws ecr create-repository --repository-name myproject-customer-service
 ```
+
+- Prepare DynamoDB table using https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
 
 ## Usage
 - Clone CodeCommit Repository
@@ -86,7 +88,7 @@ $ python app.py
 $ curl http://localhost:5000
 ```
 
-- (To Do) Backend Unit Tests
+
 
 - Generate requirements.txt
 ```bash
@@ -107,7 +109,7 @@ $ docker tag myproject-product-restapi:latest 707538076348.dkr.ecr.ap-southeast-
 $ docker run -p 5000:5000 myproject-customer-service:latest
 ```
 
-### Step 1.14: Test CRUD Operations
+### User Acceptance Testing
 - Test Get all Products
 ```bash
 curl -X GET \
@@ -152,3 +154,25 @@ curl -X DELETE \
   http://localhost:5000/products/4e53920c-505a-4a90-a694-b9300791f0ae \
   -H 'Content-Type: application/json' 
 ```
+
+### (To Do) Unit Testing
+
+### Deployment
+- Deploy to ECR
+```bash
+$ $(aws ecr get-login --no-include-email)
+```
+
+- Push our Docker Image and validate
+```bash
+$ docker push 707538076348.dkr.ecr.ap-southeast-1.amazonaws.com/myproject-product-restapi:latest
+$ aws ecr describe-images --repository-name myproject-product-restapi
+```
+
+### (Optional) Clean up
+```bash
+$ aws ecr delete-repository --repository-name myproject-product-restapi --force
+$ aws codecommit delete-repository --repository-name myproject-product-restapi
+$ rm -rf ~/environment/myproject-product-restapi
+```
+
