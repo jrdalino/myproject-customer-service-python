@@ -1,5 +1,5 @@
 FROM python:3.7
-# The ENV  ensures that the python output to terminal without buffering
+# The ENV ensures that the python output to terminal without buffering
 ENV PYTHONBUFFERED 1 
 
 RUN echo Updating existing packages, installing and upgrading python and pip.

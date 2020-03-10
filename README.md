@@ -35,8 +35,9 @@ $ cd ~/environment/myproject-customer-service
 - Follow folder structure as per https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/ and https://github.com/pallets/flask/tree/master/examples/tutorial
 ```
 ~/environment/myproject-customer-service
-├── flaskr
+├── flaskr/
 │   ├── app.py
+│   ├── auth.py
 │   ├── custom_logger.py
 │   ├── customer_routes.py
 │   ├── db.py
