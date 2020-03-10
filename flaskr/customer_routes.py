@@ -3,6 +3,7 @@ import uuid
 from flask import Blueprint
 from flask import Flask, json, Response, request, abort
 from custom_logger import setup_logger
+import customer_table_client
 
 # Set up the custom logger and the Blueprint
 logger = setup_logger(__name__)
@@ -27,7 +28,8 @@ def health_check():
 def get_all_customers():
     
     try:
-        serviceResponse = json.dumps({'customers': customers})
+        #serviceResponse = json.dumps({'customers': customers}) # static database
+        serviceResponse = customer_table_client.get_all_customers_ddb() # dynamodb
     except Exception as e:
         logger.error(e)
         abort(404)

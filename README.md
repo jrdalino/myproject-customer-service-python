@@ -28,8 +28,7 @@ $ aws ecr create-repository --repository-name myproject-customer-service
 - Clone CodeCommit Repository and navigate to working directory
 ```bash
 $ cd ~/environment
-$ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproject-customer-service
-$ cd ~/environment/myproject-customer-service
+$ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproject-customer-service && cd ~/environment/myproject-customer-service
 ```
 
 - Follow folder structure as per https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/ and https://github.com/pallets/flask/tree/master/examples/tutorial
@@ -65,13 +64,8 @@ $ cd ~/environment/myproject-customer-service
 ```bash
 $ python3 -m venv venv
 $ source venv/bin/activate
-(venv) $
-(venv) $ venv/bin/pip install flask
-(venv) $ venv/bin/pip install flask-cors
-```
-- To deactivate
-```bash
-(venv) $ deactivate
+(venv) $ venv/bin/pip install flask flask-cors boto3
+(venv) $ deactivate # To deactivate
 ```
 
 ## Logging
@@ -177,7 +171,7 @@ $ kubectl delete -f deployment.yml
 $ aws ecr delete-repository --repository-name myproject-customer-service --force
 $ aws codecommit delete-repository --repository-name myproject-customer-service
 $ rm -rf ~/environment/myproject-customer-service
-$ docker ps_
+$ docker ps
 $ docker kill <CONTAINER_ID>
 $ docker images
 $ docker system prune -a
