@@ -1,20 +1,22 @@
-# The first instruction is what image we want to base our container on
-# We use an official Python runtime as a parent image
 FROM python:3.7
+# The ENV  ensures that the python output to terminal without buffering
+ENV PYTHONBUFFERED 1 
 
-# The enviroment variable ensures that the python output is set straight
-# to the terminal with out buffering it first
-ENV PYTHONBUFFERED 1
-
-# Copy source file and python requirements and set the working directory to /app
-COPY . /app
-WORKDIR /app
-
-# Install any needed packages specified in requirements.txt
+RUN echo Updating existing packages, installing and upgrading python and pip.
+RUN apt-get update -y
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
 
-# Set image's main command and run the command within the container
-EXPOSE 5000
+RUN echo Copying tests directory
+COPY ./tests /tests
+
+RUN echo Copying flaskr directory
+COPY ./flaskr /flaskr
+
+WORKDIR /flaskr
+
+RUN echo Installing Python packages listed in requirements.txt
+RUN pip install -r ./requirements.txt
+
+RUN echo Starting python and starting the Flask service...
 ENTRYPOINT ["python"]
 CMD ["app.py"]

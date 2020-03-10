@@ -11,8 +11,8 @@ customer_module = Blueprint('customers', __name__)
 logger.info("Intialized customer routes")
 
 # Load customers static db from json file
-THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-my_file = os.path.join(THIS_FOLDER, 'customers.json')
+THIS_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+my_file = os.path.join(THIS_FOLDER, "tests", 'customers.json')
 
 with open(my_file) as f:
     customers = json.load(f)

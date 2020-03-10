@@ -18,9 +18,11 @@ curl -X POST \
   http://localhost:5000/customers \
   -H 'Content-Type: application/json' \
   -d '{
-  "name":"Product G",
-  "description": "Nulla nec",
-  "image_url": "https://via.placeholder.com/200"
+  "first_name":"New Customer First Name",
+  "last_name": "New Customer Last Name",
+  "email": "first.last@example.com", 
+  "dob": "January 1, 1900",    
+  "gender": "Female"
 }'
 ```
 
@@ -30,9 +32,11 @@ curl -X PUT \
   http://localhost:5000/customers/4e53920c-505a-4a90-a694-b9300791f0ae \
   -H 'Content-Type: application/json' \
   -d '{
-  "name":"egg 123",
-  "description": "my working description dasdasds",
-  "image_url": "product_image testes update test"
+  "first_name":"Barnie v2",
+  "last_name": "Whittam v2",
+  "email": "bwhittam0@cpanel.net v2", 
+  "dob": "December 31, 1999 v2",    
+  "gender": "Male v2"
 }'
 ```
 

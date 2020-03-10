@@ -6,7 +6,7 @@ metadata:
     app: myproject-customer-service
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: myproject-customer-service

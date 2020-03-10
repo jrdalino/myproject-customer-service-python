@@ -22,7 +22,6 @@
 $ aws codecommit create-repository --repository-name myproject-customer-service
 $ aws ecr create-repository --repository-name myproject-customer-service
 ```
-
 - Prepare DynamoDB table using https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
 
 ## Structure and Environment
@@ -33,24 +32,32 @@ $ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproje
 $ cd ~/environment/myproject-customer-service
 ```
 
-- Follow folder structure
+- Follow folder structure as per https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/ and https://github.com/pallets/flask/tree/master/examples/tutorial
 ```
 ~/environment/myproject-customer-service
+├── flaskr
+│   ├── app.py
+│   ├── custom_logger.py
+│   ├── customer_routes.py
+│   ├── db.py
+│   ├── requirements.txt
+│   └── schema.tf
 ├── kubernetes/
 │   ├── deployment.yml
 │   └── service.yml
+├── tests/
+│   ├── conftest.py
+│   ├── curl_scripts.md
+│   ├── customers.json
+│   ├── test_auth_routes.py
+│   ├── test_customer_routes.py
+│   ├── test_db.py
+│   └── test_factory.py
 ├── venv/
 ├── .gitignore
-├── app.py
 ├── buildspec.yml
-├── curl_scripts.md
-├── custom_logger.py
-├── customer_routes.py
-├── customers.json
 ├── Dockerfile
-├── README.md
-├── requirements.txt
-└── test_customer_routes.py
+└── README.md
 ```
 
 - Activate virtual environment, install flask and flask-cors
@@ -67,15 +74,17 @@ $ source venv/bin/activate
 ```
 
 ## Logging
-- Add custom logger ~/environment/myproject-customer-service/custom_logger.py
+- Add custom logger ~/environment/myproject-customer-service/flaskr/custom_logger.py
 
 ## Development
-- Add customer routes ~/environment/myproject-customer-service/customer_routes.py
-- Add app ~/environment/myproject-customer-service/app.py
+- Add static database ~/environment/myproject-customer-service/tests/customers.json
+- Add customer routes ~/environment/myproject-customer-service/flaskr/customer_routes.py
+- Add app ~/environment/myproject-customer-service/flaskr/app.py
 
 ## Run
 - Run locally
 ```bash
+$ cd flaskr
 $ chmod a+x app.py
 $ ./app.py
 $ curl http://localhost:5000
@@ -102,18 +111,20 @@ $ coverage html # open htmlcov/index.html in a browser
 - Test manually using curl scripts ~/environment/myproject-customer-service/tests/curl_scripts.md
 
 ## Containerize
-- Generate ~/environment/myproject-customer-service/requirements.txt
+- Generate ~/environment/myproject-customer-service/flaskr/requirements.txt
 ```bash
 $ pip freeze > requirements.txt
 ```
 - Add Docker File ~/environment/myproject-customer-service/Dockerfile
 - Build, Tag and Run the Docker Image locally. (Replace AccountId and Region)
 ```bash
+$ cd ~/environment/myproject-customer-service
 $ docker build -t myproject-customer-service .
 $ docker tag myproject-customer-service:latest 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
 $ docker run -d -p 5000:5000 myproject-customer-service:latest
 ```
 - Test
+
 - Push our Docker Image to ECR and validate
 ```bash
 $ $(aws ecr get-login --no-include-email)
@@ -132,7 +143,7 @@ $ aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws ia
 $ cd ~/environment/myproject-customer-service/kubernetes
 $ kubectl apply -f deployment.yml
 $ kubectl apply -f service.yml
-$ kubectl get deployment myproject-customer-service
+$ kubectl get all
 ```
 - Scale the service
 ```
@@ -146,7 +157,7 @@ $ kubectl get service myproject-customer-service -o wide
 ```
 - Test
 
-## Automatic Deployment
+## Automated Deployment
 - Add Buildspec Yaml file ~/environment/myproject-customer-service/buildspec.yml
 - Add .gitignore file ~/environment/myproject-customer-service/.gitignore
 - Add README.md file  ~/environment/myproject-customer-service/README.md
@@ -165,7 +176,8 @@ $ kubectl delete -f deployment.yml
 $ aws ecr delete-repository --repository-name myproject-customer-service --force
 $ aws codecommit delete-repository --repository-name myproject-customer-service
 $ rm -rf ~/environment/myproject-customer-service
-$ docker ps
-$ docker kill < ad04385ef6dc >
+$ docker ps_
+$ docker kill <CONTAINER_ID>
+$ docker images
 $ docker system prune -a
 ```
