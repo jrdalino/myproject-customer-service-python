@@ -61,25 +61,19 @@ $ source venv/bin/activate
 (venv) $ venv/bin/pip install flask
 (venv) $ venv/bin/pip install flask-cors
 ```
-
 - To deactivate
 ```bash
 (venv) $ deactivate
 ```
 
-- Add .gitignore file ~/environment/myproject-customer-service/.gitignore
+## Development
 - Add static database ~/environment/myproject-customer-service/customers.json
 - Add custom logger   ~/environment/myproject-customer-service/custom_logger.py
 - Add customer routes ~/environment/myproject-customer-service/customer_routes.py
 - Add app             ~/environment/myproject-customer-service/app.py
-- Add README.md file  ~/environment/myproject-customer-service/README.md
-- Generate            ~/environment/myproject-customer-service/requirements.txt
-```bash
-$ pip freeze > requirements.txt
-```
 
+## Testing
 - (To Do) Add Unit Testing ~/environment/myproject-customer-service/test_customer_routes.py
-
 - (To Do) Run Tests
 
 - Run locally before dockerizing
@@ -98,8 +92,13 @@ $ curl http://localhost:5000
 
 - Test using curl scripts ~/environment/myproject-customer-service/curl_scripts.md
 
-- Add Docker File ~/environment/myproject-customer-service/Dockerfile
+## Containerize
+- Generate            ~/environment/myproject-customer-service/requirements.txt
+```bash
+$ pip freeze > requirements.txt
+```
 
+- Add Docker File ~/environment/myproject-customer-service/Dockerfile
 - Build, Tag and Run the Docker Image locally. (Replace AccountId and Region)
 ```bash
 $ docker build -t myproject-customer-service .
@@ -108,7 +107,6 @@ $ docker run -d -p 5000:5000 myproject-customer-service:latest
 ```
 
 - Test using curl scripts ~/environment/myproject-customer-service/curl_scripts.md
-
 - Push our Docker Image to ECR and validate
 ```bash
 $ $(aws ecr get-login --no-include-email)
@@ -148,7 +146,8 @@ $ kubectl get service myproject-customer-service -o wide
 
 ## Automatic Deployment
 - Add Buildspec Yaml file ~/environment/myproject-customer-service/buildspec.yml
-
+- Add .gitignore file ~/environment/myproject-customer-service/.gitignore
+- Add README.md file  ~/environment/myproject-customer-service/README.md
 - Make changes, commit and push changes to CodeCommit repository to trigger codepipeline deployment to EKS
 ```bash
 $ git add .
