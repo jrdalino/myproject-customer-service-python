@@ -10,10 +10,10 @@ customer_module = Blueprint('customers', __name__)
 
 logger.info("Intialized customer routes")
 
+# Load customers static db from json file
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 my_file = os.path.join(THIS_FOLDER, 'customers.json')
 
-# load customers static db from json file
 with open(my_file) as f:
     customers = json.load(f)
 
@@ -22,6 +22,7 @@ with open(my_file) as f:
 def health_check():
     return "This a health check. Customer Management Service is up and running."
 
+# Get all customers
 @customer_module.route('/customers')
 def get_all_customers():
     
@@ -35,7 +36,8 @@ def get_all_customers():
     resp.headers["Content-Type"] = "application/json"
     
     return resp
-    
+
+# Get customer by customer_id
 @customer_module.route("/customers/<string:customer_id>", methods=['GET'])
 def get_customer(customer_id):
     
@@ -52,6 +54,7 @@ def get_customer(customer_id):
 
     return resp
 
+# Add a new customer
 @customer_module.route("/customers", methods=['POST'])
 def create_customer():
 
@@ -60,9 +63,11 @@ def create_customer():
 
         customer = {
             'customer_id': str(uuid.uuid4()),
-            'name': customer_dict['name'],
-            'description': customer_dict['description'],
-            'image_url': customer_dict['image_url']
+            'first_name': customer_dict['first_name'],
+            'last_name': customer_dict['last_name'],
+            'email': customer_dict['email'],
+            'dob': customer_dict['dob'],
+            'gender': customer_dict['gender']
         }
 
         customers.append(customer)
@@ -82,6 +87,7 @@ def create_customer():
 
     return resp
 
+# Update customer by customer_id
 @customer_module.route("/customers/<customer_id>", methods=['PUT'])
 def update_customer(customer_id):
     
@@ -91,14 +97,18 @@ def update_customer(customer_id):
         
         customer = [p for p in customers if p['customer_id'] == customer_id]
 
-        customer[0]['name'] = request.json.get('name', customer[0]['name'])
-        customer[0]['description'] = request.json.get('description', customer[0]['description'])
-        customer[0]['image_url'] = request.json.get('image_url', customer[0]['image_url'])
+        customer[0]['first_name'] = request.json.get('first_name', customer[0]['first_name'])
+        customer[0]['last_name'] = request.json.get('last_name', customer[0]['last_name'])
+        customer[0]['email'] = request.json.get('email', customer[0]['email'])
+        customer[0]['dob'] = request.json.get('dob', customer[0]['dob'])
+        customer[0]['gender'] = request.json.get('gender', customer[0]['gender'])
         
         customer = {
-            'name': request.json.get('name', customer[0]['name']), 
-            'description' : request.json.get('description', customer[0]['description']),
-            'image_url' : request.json.get('image_url', customer[0]['image_url'])
+            'first_name' : request.json.get('first_name', customer[0]['first_name']),
+            'last_name' : request.json.get('last_name', customer[0]['last_name']),
+            'email' : request.json.get('email', customer[0]['email']),
+            'dob' : request.json.get('dob', customer[0]['dob']),
+            'gender' : request.json.get('gender', customer[0]['gender'])
         }
 
         serviceResponse = json.dumps({
@@ -115,12 +125,12 @@ def update_customer(customer_id):
 
     return resp
 
+# Delete customer by customer_id
 @customer_module.route("/customers/<customer_id>", methods=['DELETE'])
 def delete_customer(customer_id):
     try:
         customer = [p for p in customers if p['customer_id'] == customer_id]
 
-        #deletes a customer given its id.
         serviceResponse = json.dumps({
                 'customers' : customer,
                 'status': 'DELETED OK'
