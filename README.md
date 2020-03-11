@@ -47,10 +47,10 @@ $ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproje
 │   └── service.yml
 ├── tests/
 │   ├── conftest.py
-│   ├── curl_scripts.md
 │   ├── customers.json
 │   ├── test_auth_routes.py
 │   ├── test_customer_routes.py
+│   ├── test_curl.sh
 │   ├── test_db.py
 │   └── test_factory.py
 ├── venv/
@@ -86,6 +86,15 @@ $ curl http://localhost:5000
 ```
 
 ## Testing (TODO: https://github.com/pallets/flask/tree/master/examples/tutorial/tests) 
+- Add tests using curl ~/environment/myproject-customer-service/tests/test_curl.sh
+- Repace hostname and port variables
+- Run tests using curl 
+```
+$ cd ~/environment/myproject-customer-service/tests
+$ chmod a+x test_curl.sh
+$ ./test_curl.sh
+```
+
 - Install pytest and coverage to test and measure your code
 ```
 (venv) $ venv/bin/pip install pytest coverage
@@ -103,7 +112,7 @@ $ coverage run -m pytest
 $ coverage report
 $ coverage html # open htmlcov/index.html in a browser
 ```
-- Test manually using curl scripts ~/environment/myproject-customer-service/tests/curl_scripts.md
+
 
 ## Containerize
 - Generate ~/environment/myproject-customer-service/flaskr/requirements.txt
