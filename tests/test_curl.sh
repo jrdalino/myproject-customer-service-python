@@ -30,7 +30,7 @@ curl -X POST \
   "first_name":"New Customer First Name",
   "last_name": "New Customer Last Name",
   "email": "first.last@example.com", 
-  "dob": "January 1, 1900",    
+  "dob": "February 1, 1900",    
   "gender": "Female"
 }'
 echo
@@ -42,11 +42,11 @@ curl -X PUT \
   http://$hostname:$port/customers/$customer_id \
   -H 'Content-Type: application/json' \
   -d '{
-  "first_name":"Barnie v2",
-  "last_name": "Whittam v2",
-  "email": "bwhittam0@cpanel.net v2", 
-  "dob": "December 31, 1999 v2",    
-  "gender": "Male v2"
+  "first_name":"New Customer First Name v2",
+  "last_name": "New Customer Last Name v2",
+  "email": "first.last@example.com v2", 
+  "dob": "February 1, 1900 v2",    
+  "gender": "Female v2"
 }'
 echo
 echo

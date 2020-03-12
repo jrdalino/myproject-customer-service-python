@@ -87,8 +87,8 @@ $ curl http://localhost:5000
 
 ## Testing (TODO: https://github.com/pallets/flask/tree/master/examples/tutorial/tests) 
 - Add tests using curl ~/environment/myproject-customer-service/tests/test_curl.sh
-- Repace hostname and port variables
-- Run tests using curl 
+- Replace hostname and port variables
+- Run tests using curl
 ```
 $ cd ~/environment/myproject-customer-service/tests
 $ chmod a+x test_curl.sh
@@ -112,7 +112,6 @@ $ coverage run -m pytest
 $ coverage report
 $ coverage html # open htmlcov/index.html in a browser
 ```
-
 
 ## Containerize
 - Generate ~/environment/myproject-customer-service/flaskr/requirements.txt
