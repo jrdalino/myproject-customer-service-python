@@ -5,7 +5,7 @@ import sys
 
 
 from moto import mock_dynamodb2
-from flaskr.customer_table_client import getAllCustomers
+from flaskr.customer_table_client import (getAllCustomers, getCustomer)
 from flaskr.db import get_db_client
 import json
 
@@ -13,7 +13,7 @@ class TestDynamo(unittest.TestCase):
 
     def setUp(self):
         self.table_name = 'customers'
-        
+
         self.customer_data = {
           "customers": [
             {
@@ -97,6 +97,13 @@ class TestDynamo(unittest.TestCase):
 
 
 
+    def test_get_customer(self):
+
+        self.__moto_dynamodb_setup()
+
+        customer = getCustomer("4e53920c-505a-4a90-a694-b9300791f0ae")
+
+        self.assertEqual(json.dumps(self.customer_data['customers'][0]), customer)
 
 
 
