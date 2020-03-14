@@ -4,13 +4,21 @@ import logging
 from collections import defaultdict
 import argparse
 import uuid
-from custom_logger import setup_logger
+
+if __package__ is None or __package__ == '':
+    # uses current directory visibility
+    from custom_logger import setup_logger
+    from db import get_db_client
+else:
+    # uses current package visibility
+    from flaskr.custom_logger import setup_logger
+    from flaskr.db import get_db_client
 
 logger = setup_logger(__name__)
-dynamodb = boto3.client('dynamodb', region_name='ap-southeast-2')
 table_name = 'customers'
 
 def getAllCustomers():
+    dynamodb = get_db_client()
     response = dynamodb.scan(
         TableName=table_name
     )
@@ -30,6 +38,7 @@ def getAllCustomers():
     return json.dumps(customer_list)
 
 def getCustomer(customer_id):
+    dynamodb = get_db_client()
     response = dynamodb.get_item(
         TableName=table_name,
         Key={
@@ -52,6 +61,7 @@ def getCustomer(customer_id):
     return json.dumps({'customers': customer})
 
 def createCustomer(customer_dict):
+    dynamodb = get_db_client()
     customer_id = str(uuid.uuid4())
     first_name = str(customer_dict['first_name'])
     last_name = str(customer_dict['last_name'])    
@@ -95,6 +105,8 @@ def createCustomer(customer_dict):
     return json.dumps({'customers': customer})
 
 def updateCustomer(customer_id, customer_dict):
+    dynamodb = get_db_client()
+
     first_name = str(customer_dict['first_name'])
     last_name = str(customer_dict['last_name'])
     email = str(customer_dict['email'])
@@ -144,6 +156,8 @@ def updateCustomer(customer_id, customer_dict):
     return json.dumps({'customers': customer})
 
 def deleteCustomer(customer_id):
+    dynamodb = get_db_client()
+    
     response = dynamodb.delete_item(
         TableName=table_name,
         Key={
