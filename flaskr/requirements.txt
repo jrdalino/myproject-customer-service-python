@@ -1,0 +1,5 @@
+flask
+boto3
+moto
+pytest
+flask-cors
