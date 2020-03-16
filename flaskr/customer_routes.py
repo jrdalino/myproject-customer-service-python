@@ -28,9 +28,9 @@ def health_check():
 def get_all_customers():
     try:
         # note: uncomment this to use static db
-        # serviceResponse = json.dumps({'customers': customers})
+        serviceResponse = json.dumps({'customers': customers})
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.getAllCustomers()
+        # serviceResponse = customer_table_client.getAllCustomers()
     except Exception as e:
         logger.error(e)
         abort(404)
@@ -43,14 +43,18 @@ def get_all_customers():
 def get_customer(customer_id):
     try:
         # note: uncomment this to use static db
-        # customer = [c for c in customers if c['customer_id'] == customer_id]
-        # serviceResponse = json.dumps({'customers': customer[0]})
+        customer = [c for c in customers if c['customer_id'] == customer_id]
+        serviceResponse = json.dumps({'customers': {
+                'data': customer[0]
+                }, 
+                'status': 'GET OK'
+            })
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.getCustomer(customer_id) 
+        # serviceResponse = customer_table_client.getCustomer(customer_id) 
     except Exception as e:
         logger.error(e)
         abort(404)
-    resp = Response(serviceResponse)
+    resp = Response(serviceResponse, 200)
     resp.headers["Content-Type"] = "application/json"
     return resp
 
@@ -60,25 +64,27 @@ def create_customer():
     try:
         customer_dict = json.loads(request.data)
         # note: uncomment this to use static db
-        # customer = {
-        #     'customer_id': str(uuid.uuid4()),
-        #     'first_name': customer_dict['first_name'],
-        #     'last_name': customer_dict['last_name'],
-        #     'email': customer_dict['email'],
-        #     'dob': customer_dict['dob'],
-        #     'gender': customer_dict['gender']
-        # }
-        # customers.append(customer)
-        # serviceResponse = json.dumps({
-        #         'customers': customer,
-        #         'status': 'CREATED OK'
-        #         })
+        customer = {
+            'customer_id': str(uuid.uuid4()),
+            'first_name': customer_dict['first_name'],
+            'last_name': customer_dict['last_name'],
+            'email': customer_dict['email'],
+            'dob': customer_dict['dob'],
+            'gender': customer_dict['gender']
+        }
+        customers.append(customer)
+        serviceResponse = json.dumps({
+                'customers': {
+                    'data': customer,
+                    'status': 'CREATED OK'
+                    }
+                })
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.createCustomer(customer_dict)
+        # serviceResponse = customer_table_client.createCustomer(customer_dict)
     except Exception as e:
         logger.error(e)
         abort(400)        
-    resp = Response(serviceResponse)   
+    resp = Response(serviceResponse, 201)   
     resp.headers["Content-Type"] = "application/json"
     return resp
 
@@ -88,29 +94,31 @@ def update_customer(customer_id):
     try:
         customer_dict = json.loads(request.data)
         # note: uncomment this to use static db      
-        # customer = [c for c in customers if c['customer_id'] == customer_id]
-        # customer[0]['first_name'] = request.json.get('first_name', customer[0]['first_name'])
-        # customer[0]['last_name'] = request.json.get('last_name', customer[0]['last_name'])
-        # customer[0]['email'] = request.json.get('email', customer[0]['email'])
-        # customer[0]['dob'] = request.json.get('dob', customer[0]['dob'])
-        # customer[0]['gender'] = request.json.get('gender', customer[0]['gender'])
-        # customer = {
-        #     'first_name' : request.json.get('first_name', customer[0]['first_name']),
-        #     'last_name' : request.json.get('last_name', customer[0]['last_name']),
-        #     'email' : request.json.get('email', customer[0]['email']),
-        #     'dob' : request.json.get('dob', customer[0]['dob']),
-        #     'gender' : request.json.get('gender', customer[0]['gender'])
-        # }
-        # serviceResponse = json.dumps({
-        #         'customers': customer,
-        #         'status': 'UPDATED OK'
-        #         })
+        customer = [c for c in customers if c['customer_id'] == customer_id]
+        customer[0]['first_name'] = request.json.get('first_name', customer[0]['first_name'])
+        customer[0]['last_name'] = request.json.get('last_name', customer[0]['last_name'])
+        customer[0]['email'] = request.json.get('email', customer[0]['email'])
+        customer[0]['dob'] = request.json.get('dob', customer[0]['dob'])
+        customer[0]['gender'] = request.json.get('gender', customer[0]['gender'])
+        customer = {
+            'first_name' : request.json.get('first_name', customer[0]['first_name']),
+            'last_name' : request.json.get('last_name', customer[0]['last_name']),
+            'email' : request.json.get('email', customer[0]['email']),
+            'dob' : request.json.get('dob', customer[0]['dob']),
+            'gender' : request.json.get('gender', customer[0]['gender'])
+        }
+        serviceResponse = json.dumps({
+                'customers': {
+                    'data': customer
+                },
+                'status': 'UPDATED OK'
+                })
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.updateCustomer(customer_id, customer_dict)
+        # serviceResponse = customer_table_client.updateCustomer(customer_id, customer_dict)
     except Exception as e:
         logger.error(e)
         abort(404)
-    resp = Response(serviceResponse)
+    resp = Response(serviceResponse, 200)
     resp.headers["Content-Type"] = "application/json"
     return resp
 
@@ -119,27 +127,47 @@ def update_customer(customer_id):
 def delete_customer(customer_id):
     try:
         # note: uncomment this to use static db       
-        # customer = [c for c in customers if c['customer_id'] == customer_id]
-        # serviceResponse = json.dumps({
-        #         'customers' : customer,
-        #         'status': 'DELETED OK'
-        #     })
-        # customers.remove(customer[0])
+        customer = [c for c in customers if c['customer_id'] == customer_id]
+        serviceResponse = json.dumps({
+                'customers' : {
+                    'data': customer[0]
+                },
+                'status': 'DELETED OK'
+            })
+        customers.remove(customer[0])
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.deleteCustomer(customer_id)
+        # serviceResponse = customer_table_client.deleteCustomer(customer_id)
     except Exception as e:
         logger.error(e)
         abort(400)
-    resp = Response(serviceResponse)
+    resp = Response(serviceResponse, 200)
     resp.headers["Content-Type"] = "application/json"
     return resp
 
 @customer_module.errorhandler(404)
 def item_not_found(e):
+    
     # note that we set the 404 status explicitly
-    return json.dumps({'error': 'Customer not found'}), 404
+    errorResponse = json.dumps({'customers': {
+        'data': {},
+        'status': 'Customer not found'
+        }})
+
+    resp = Response(errorResponse, 404)
+    resp.headers["Content-Type"] = "application/json"
+
+    return resp
+
 
 @customer_module.errorhandler(400)
 def bad_request(e):
     # note that we set the 400 status explicitly
-    return json.dumps({'error': 'Bad request'}), 400
+    errorResponse = json.dumps({'customers': {
+        'data': {},
+        'status': 'Customer not found'
+        }})
+
+    resp = Response(errorResponse, 400)
+    resp.headers["Content-Type"] = "application/json"
+
+    return resp
