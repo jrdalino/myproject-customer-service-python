@@ -58,7 +58,11 @@ def getCustomer(customer_id):
         'dob': item['dob']['S'],
         'gender': item['gender']['S'],
     }
-    return json.dumps({'customers': customer})
+    return json.dumps({'customers': {
+            'data' : customer,
+            'status': 'GET OK'
+            }
+        })
 
 def createCustomer(customer_dict):
     dynamodb = get_db_client()
@@ -94,12 +98,15 @@ def createCustomer(customer_dict):
     # logger.info("Logger Response: ")
     # logger.info(response)
     customer = {
-        'customer_id': customer_id,
-        'first_name': first_name,
-        'last_name': last_name,        
-        'email': email,
-        'dob': dob,
-        'gender': gender,
+
+        'data' : {
+            'customer_id': customer_id,
+            'first_name': first_name,
+            'last_name': last_name,        
+            'email': email,
+            'dob': dob,
+            'gender': gender,
+        },
         'status' : 'CREATED OK'
     }
     return json.dumps({'customers': customer})
@@ -146,12 +153,15 @@ def updateCustomer(customer_id, customer_dict):
     # logger.info("Logger Response: ")
     # logger.info(response)
     customer = {
-        'first_name': first_name,
-        'last_name': last_name,
-        'email': email,
-        'dob': dob,
-        'gender': gender,        
-        'status' : 'UPDATED OK'
+        'data' : {
+            'customer_id': customer_id,
+            'first_name': first_name,
+            'last_name': last_name,        
+            'email': email,
+            'dob': dob,
+            'gender': gender,
+        },
+        'status' : 'CREATED OK'
     }
     return json.dumps({'customers': customer})
 
@@ -169,7 +179,9 @@ def deleteCustomer(customer_id):
     # logger.info("Logger Response: ")
     # logger.info(response)
     customer = {
-        'customer_id' : customer_id,
+        'data': {
+            'customer_id' : customer_id,
+        },
         'status' : 'DELETED OK'
     }
     return json.dumps({'customers': customer})
