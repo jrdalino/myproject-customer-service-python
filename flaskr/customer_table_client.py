@@ -49,8 +49,6 @@ def getCustomer(customer_id):
     )
     # logger.info("Logger Response: ")
     # logger.info(response)
-    print("Response")
-    print(response)
 
     if 'Item' in response:
 
