@@ -18,10 +18,9 @@
 - Docker, Python, Flask, Git, Virtualenv https://github.com/jrdalino/development-environment-setup
 - Prepare DynamoDB table using https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
 - Setup CI/CD using https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform. This will create CodeCommit Repo, ECR Repo, CodeBuild Project, Lambda Function and CodePipeline Pipeline 
-- For manual deployment, you may also create the repositories manually
-```bash
-$ aws codecommit create-repository --repository-name myproject-customer-service
-$ aws ecr create-repository --repository-name myproject-customer-service
+- Create ELB Service Role if it doesnt exist yet
+```
+$ aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"
 ```
 
 ## Structure and Environment
@@ -76,6 +75,10 @@ $ source venv/bin/activate
 - Add customer dynamodb table client ~/environment/myproject-customer-service/flaskr/customer_table_client.py
 - Add customer routes ~/environment/myproject-customer-service/flaskr/customer_routes.py
 - Add app ~/environment/myproject-customer-service/flaskr/app.py
+- You may also copy everything from Github repo to CodeCommit repo
+```
+$ rsync -rv --exclude=.git ~/environment/myproject-customer-service-python/ ~/environment/myproject-customer-service/
+```
 
 ## Run
 - Run locally
@@ -127,20 +130,23 @@ $ docker tag myproject-customer-service:latest 222337787619.dkr.ecr.ap-southeast
 $ docker run -e AWS_ACCESS_KEY_ID=<REPLACE_ME> -e AWS_SECRET_ACCESS_KEY=<REPLACE_ME> -d -p 5000:5000 myproject-customer-service:latest
 $ curl http://localhost:5000
 ```
+- Note: For manual deployment only, create the image repositories manually
+```bash
+$ aws ecr create-repository --repository-name myproject-customer-service
+```
+- Push Docker Image to ECR and validate
 
-- Push our Docker Image to ECR and validate
 ```bash
 $ $(aws ecr get-login --no-include-email)
 $ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
 $ aws ecr describe-images --repository-name myproject-customer-service
 ```
 
-## Manual Deployment
-- Create ELB Service Role if it doesnt exist yet
-```
-$ aws iam get-role --role-name "AWSServiceRoleForElasticLoadBalancing" || aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"
-```
+## Pre-Deployment
+- Add .gitignore file ~/environment/myproject-customer-service/.gitignore
 - Add Kubernetes Deployment and Service Yaml files ~/environment/myproject-customer-service/kubernetes/deployment.yml and ~/environment/myproject-customer-service/kubernetes/service.yml
+
+## Manual Deployment
 - Create k8s Deployment and Service
 ```
 $ cd ~/environment/myproject-customer-service/kubernetes
@@ -150,14 +156,19 @@ $ kubectl get all
 ```
 
 ## Automated Deployment
-- Read usage section https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform
+- Review https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform
 - Add Buildspec Yaml file ~/environment/myproject-customer-service/buildspec.yml
-- Add .gitignore file ~/environment/myproject-customer-service/.gitignore
 - Make changes, commit and push changes to CodeCommit repository to trigger codepipeline deployment to EKS
 ```bash
 $ git add .
 $ git commit -m "Initial Commit"
 $ git push origin master
+```
+- Create k8s Service (You only have to do this once)
+```
+$ cd ~/environment/myproject-customer-service/kubernetes
+$ kubectl apply -f service.yml
+$ kubectl get all
 ```
 
 ## (Optional) Clean up
