@@ -150,6 +150,7 @@ $ kubectl get all
 ```
 
 ## Automated Deployment
+- Read usage section https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform
 - Add Buildspec Yaml file ~/environment/myproject-customer-service/buildspec.yml
 - Add .gitignore file ~/environment/myproject-customer-service/.gitignore
 - Make changes, commit and push changes to CodeCommit repository to trigger codepipeline deployment to EKS
