@@ -117,9 +117,11 @@ def update_customer(customer_id):
         # serviceResponse = customer_table_client.updateCustomer(customer_id, customer_dict)
     except Exception as e:
         logger.error(e)
-        abort(404)
+        abort(400)
+
     resp = Response(serviceResponse, 200)
     resp.headers["Content-Type"] = "application/json"
+    
     return resp
 
 # Delete customer by customer_id
@@ -164,7 +166,7 @@ def bad_request(e):
     # note that we set the 400 status explicitly
     errorResponse = json.dumps({'customers': {
         'data': {},
-        'status': 'Customer not found'
+        'status': 'Bad request'
         }})
 
     resp = Response(errorResponse, 400)

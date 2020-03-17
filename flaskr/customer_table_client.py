@@ -49,20 +49,37 @@ def getCustomer(customer_id):
     )
     # logger.info("Logger Response: ")
     # logger.info(response)
-    item = response["Item"]
-    customer = {
-        'customer_id': item["customer_id"]["S"],
-        'first_name': item['first_name']['S'],
-        'last_name': item['last_name']['S'],            
-        'email': item['email']['S'],
-        'dob': item['dob']['S'],
-        'gender': item['gender']['S'],
-    }
-    return json.dumps({'customers': {
+    print("Response")
+    print(response)
+
+    if 'Item' in response:
+
+        item = response['Item']
+
+        customer = {
+            'customer_id': item["customer_id"]["S"],
+            'first_name': item['first_name']['S'],
+            'last_name': item['last_name']['S'],            
+            'email': item['email']['S'],
+            'dob': item['dob']['S'],
+            'gender': item['gender']['S'],
+        }
+
+        return json.dumps({'customers': {
             'data' : customer,
             'status': 'GET OK'
             }
         })
+
+    else: 
+
+        return json.dumps({'customers': {
+            'data' : {},
+            'status': 'Customer not found'
+            }
+        })
+
+
 
 def createCustomer(customer_dict):
     dynamodb = get_db_client()
@@ -161,7 +178,7 @@ def updateCustomer(customer_id, customer_dict):
             'dob': dob,
             'gender': gender,
         },
-        'status' : 'CREATED OK'
+        'status' : 'UPDATED OK'
     }
     return json.dumps({'customers': customer})
 
