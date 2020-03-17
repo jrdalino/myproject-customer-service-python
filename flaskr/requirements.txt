@@ -4,3 +4,4 @@ moto
 pytest
 flask-cors
 coverage
+pytest-flask
