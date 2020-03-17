@@ -58,9 +58,6 @@ class TestDynamo(unittest.TestCase):
 						"gender": "Male"
 				}
 
-				
-
-
 
 		@mock_dynamodb2
 		def __moto_dynamodb_setup(self):
