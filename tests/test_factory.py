@@ -1,6 +1,13 @@
-import requests
+import pytest
+from flaskr import create_app
 
-# Tests if the app is running.
-def test_health_check(url="http://localhost:5000"):
-    response = requests.get(url)
-    assert response.content == b"This a health check. Customer Management Service is up and running."
+# You must create a mock app
+@pytest.fixture
+def app():
+	app = create_app()
+	return app
+
+# @pytest.fixture
+def test_health_check(client):
+    response = client.get("/")
+    assert response.data == b"This a health check. Customer Management Service is up and running."
