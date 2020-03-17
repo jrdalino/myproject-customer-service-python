@@ -2,8 +2,17 @@ import os
 import uuid
 from flask import Blueprint
 from flask import Flask, json, Response, request, abort
-from custom_logger import setup_logger
-import customer_table_client
+
+
+# Add new blueprints here
+if __package__ is None or __package__ == '':
+    # uses current directory visibility
+    import customer_table_client
+    from custom_logger import setup_logger
+else:
+    # uses current package visibility
+    from flaskr import customer_table_client
+    from flaskr.custom_logger import setup_logger
 
 # Set up the custom logger and the Blueprint
 logger = setup_logger(__name__)
