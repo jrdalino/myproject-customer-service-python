@@ -5,7 +5,9 @@ import sys
 
 
 from moto import mock_dynamodb2
-from flaskr.customer_table_client import (getAllCustomers, getCustomer, createCustomer)
+from flaskr.customer_table_client import getAllCustomers, getCustomer, \
+	createCustomer, updateCustomer, deleteCustomer
+
 from flaskr.db import get_db_client
 import json
 
@@ -44,8 +46,9 @@ class TestDynamo(unittest.TestCase):
 				}
 				self.dynamodb = get_db_client()
 
-				self.test_customer_id = "4e53920c-505a-4a90-a694-b9300791f0ae"
-				self.test_create_customer_id = "3knasda-a505-4a90-mhk3-b9300791f0ae"
+				self.test_customer_id = '4e53920c-505a-4a90-a694-b9300791f0ae'
+				self.test_delete_customer_id = "2b473002-36f8-4b87-954e-9a377e0ccbec"
+
 
 				self.test_customer_dict = {
 						"first_name": "Mikhael",
@@ -117,17 +120,8 @@ class TestDynamo(unittest.TestCase):
 
 				customer = getCustomer(self.test_customer_id)
 
-				# Uncomment for debugging purposes
-				print("Customer")
-				print(type(customer))
-				print(json.loads(customer)['customers'])
-
 				test_customer = [c for c in self.customer_data['customers'] if c['customer_id'] == self.test_customer_id]
-				
-				print("Test customer")	
-				print(test_customer[0])	
-
-				
+			
 				# check if the data matches the sample data
 				self.assertEqual(json.loads(customer)['customers']['data'], test_customer[0])
 
@@ -142,18 +136,9 @@ class TestDynamo(unittest.TestCase):
 
 				customer = createCustomer(self.test_customer_dict)
 
-				print("Customer")
-				print(type(customer))
-				print(customer)
 				created_id = json.loads(customer)['customers']['data']['customer_id']
-				print(created_id)
 
 				customer_get = getCustomer(created_id)
-
-				print("Get Customer")
-				print(type(customer_get))
-				print(customer_get)
-			
 
 				# check if the data key matches the created customer object
 				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customer_get)['customers']['data'])
@@ -163,11 +148,47 @@ class TestDynamo(unittest.TestCase):
 				self.assertEqual(json.loads(customer)['customers']['status'], "CREATED OK")
 
 
-			
+
+		@mock_dynamodb2
+		def test_update_customer(self):
+
+				self.__moto_dynamodb_setup()
+
+				customer = updateCustomer(self.test_customer_id, self.test_customer_dict)
+
+				created_id = json.loads(customer)['customers']['data']['customer_id']
+
+				customer_get = getCustomer(created_id)
+
+				# check if the data key matches the updated customer object
+				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customer_get)['customers']['data'])
+
+
+				# check if the status is UPDATED OK
+				self.assertEqual(json.loads(customer)['customers']['status'], "UPDATED OK")
 
 
 
+		@mock_dynamodb2
+		def test_delete_customer(self):
 
+				self.__moto_dynamodb_setup()
+
+				customer = deleteCustomer(self.test_delete_customer_id)
+
+				deleted_id = json.loads(customer)['customers']['data']['customer_id']
+
+				customer_get = getCustomer(deleted_id)
+
+				# check if the customer_id matches the deleted object
+				self.assertEqual(deleted_id, self.test_delete_customer_id)
+
+				# check if the status is DELETED OK
+				self.assertEqual(json.loads(customer)['customers']['status'], "DELETED OK")
+
+
+				# check if the customer exists will fail if existing
+				self.assertEqual(json.loads(customer_get)['customers']['status'], "Customer not found")
 
 
 
