@@ -16,13 +16,13 @@
 
 ## Prerequisites
 - Docker, Python, Flask, Git, Virtualenv https://github.com/jrdalino/development-environment-setup
+- Prepare DynamoDB table using https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
 - Setup CI/CD using https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform. This will create CodeCommit Repo, ECR Repo, CodeBuild Project, Lambda Function and CodePipeline Pipeline 
-- You may also create the repositories manually
+- For manual deployment, you may also create the repositories manually
 ```bash
 $ aws codecommit create-repository --repository-name myproject-customer-service
 $ aws ecr create-repository --repository-name myproject-customer-service
 ```
-- Prepare DynamoDB table using https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
 
 ## Structure and Environment
 - Clone CodeCommit Repository and navigate to working directory
@@ -73,6 +73,7 @@ $ source venv/bin/activate
 
 ## Development
 - Add static database ~/environment/myproject-customer-service/tests/customers.json
+- Add customer dynamodb table client ~/environment/myproject-customer-service/flaskr/customer_table_client.py
 - Add customer routes ~/environment/myproject-customer-service/flaskr/customer_routes.py
 - Add app ~/environment/myproject-customer-service/flaskr/app.py
 
@@ -94,7 +95,6 @@ $ cd ~/environment/myproject-customer-service/tests
 $ chmod a+x test_curl.sh
 $ ./test_curl.sh
 ```
-
 - Install pytest and coverage to test and measure your code
 ```
 (venv) $ venv/bin/pip install pytest coverage
@@ -124,9 +124,9 @@ $ pip freeze > requirements.txt
 $ cd ~/environment/myproject-customer-service
 $ docker build -t myproject-customer-service .
 $ docker tag myproject-customer-service:latest 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
-$ docker run -d -p 5000:5000 myproject-customer-service:latest
+$ docker run -e AWS_ACCESS_KEY_ID=<REPLACE_ME> -e AWS_SECRET_ACCESS_KEY=<REPLACE_ME> -d -p 5000:5000 myproject-customer-service:latest
+$ curl http://localhost:5000
 ```
-- Test
 
 - Push our Docker Image to ECR and validate
 ```bash
@@ -148,29 +148,16 @@ $ kubectl apply -f deployment.yml
 $ kubectl apply -f service.yml
 $ kubectl get all
 ```
-- Scale the service
-```
-$ kubectl get deployments
-$ kubectl scale deployment myproject-customer-service --replicas=2
-$ kubectl get deployments
-```
-- Find the Service Address
-```
-$ kubectl get service myproject-customer-service -o wide
-```
-- Test
 
 ## Automated Deployment
 - Add Buildspec Yaml file ~/environment/myproject-customer-service/buildspec.yml
 - Add .gitignore file ~/environment/myproject-customer-service/.gitignore
-- Add README.md file  ~/environment/myproject-customer-service/README.md
 - Make changes, commit and push changes to CodeCommit repository to trigger codepipeline deployment to EKS
 ```bash
 $ git add .
 $ git commit -m "Initial Commit"
 $ git push origin master
 ```
-- Test
 
 ## (Optional) Clean up
 ```bash

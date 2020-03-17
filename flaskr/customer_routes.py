@@ -66,7 +66,10 @@ def create_customer():
         #     'last_name': customer_dict['last_name'],
         #     'email': customer_dict['email'],
         #     'dob': customer_dict['dob'],
-        #     'gender': customer_dict['gender']
+        #     'gender': customer_dict['gender'],
+        #     'customer_number': customer_dict['customer_number'],
+        #     'card_number': customer_dict['card_number'],
+        #     'phone': customer_dict['phone']
         # }
         # customers.append(customer)
         # serviceResponse = json.dumps({
@@ -94,12 +97,18 @@ def update_customer(customer_id):
         # customer[0]['email'] = request.json.get('email', customer[0]['email'])
         # customer[0]['dob'] = request.json.get('dob', customer[0]['dob'])
         # customer[0]['gender'] = request.json.get('gender', customer[0]['gender'])
+        # customer[0]['customer_number'] = request.json.get('customer_number', customer[0]['customer_number'])
+        # customer[0]['card_number'] = request.json.get('card_number', customer[0]['card_number'])
+        # customer[0]['phone'] = request.json.get('phone', customer[0]['phone'])
         # customer = {
         #     'first_name' : request.json.get('first_name', customer[0]['first_name']),
         #     'last_name' : request.json.get('last_name', customer[0]['last_name']),
         #     'email' : request.json.get('email', customer[0]['email']),
         #     'dob' : request.json.get('dob', customer[0]['dob']),
-        #     'gender' : request.json.get('gender', customer[0]['gender'])
+        #     'gender' : request.json.get('gender', customer[0]['gender']),
+        #     'customer_number' : request.json.get('customer_number', customer[0]['customer_number']),
+        #     'card_number' : request.json.get('card_number', customer[0]['card_number']),       
+        #     'phone' : request.json.get('phone', customer[0]['phone'])
         # }
         # serviceResponse = json.dumps({
         #         'customers': customer,

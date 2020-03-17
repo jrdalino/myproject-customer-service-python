@@ -21,10 +21,13 @@ def getAllCustomers():
         customer = {
             'customer_id': item["customer_id"]["S"],
             'first_name': item['first_name']['S'],
-            'last_name': item['last_name']['S'],            
+            'last_name': item['last_name']['S'],
             'email': item['email']['S'],
             'dob': item['dob']['S'],
             'gender': item['gender']['S'],
+            'customer_number': item['customer_number']['S'],
+            'card_number': item['card_number']['S'],
+            'phone': item['phone']['S'],
         }
         customer_list["customers"].append(customer)
     return json.dumps(customer_list)
@@ -44,20 +47,26 @@ def getCustomer(customer_id):
     customer = {
         'customer_id': item["customer_id"]["S"],
         'first_name': item['first_name']['S'],
-        'last_name': item['last_name']['S'],            
+        'last_name': item['last_name']['S'],
         'email': item['email']['S'],
         'dob': item['dob']['S'],
         'gender': item['gender']['S'],
+        'customer_number': item['customer_number']['S'],
+        'card_number': item['card_number']['S'],
+        'phone': item['phone']['S'],
     }
     return json.dumps({'customers': customer})
 
 def createCustomer(customer_dict):
     customer_id = str(uuid.uuid4())
     first_name = str(customer_dict['first_name'])
-    last_name = str(customer_dict['last_name'])    
+    last_name = str(customer_dict['last_name'])
     email = str(customer_dict['email'])
     dob = str(customer_dict['dob'])
     gender = str(customer_dict['gender'])
+    customer_number = str(customer_dict['customer_number'])
+    card_number = str(customer_dict['card_number'])
+    phone = str(customer_dict['phone'])
     response = dynamodb.put_item(
         TableName=table_name,
         Item={
@@ -78,6 +87,15 @@ def createCustomer(customer_dict):
                 },
                 'gender': {
                     'S' : gender
+                },
+                'customer_number': {
+                    'S' : customer_number
+                },
+                'card_number': {
+                    'S' : card_number
+                },
+                'phone': {
+                    'S' : phone
                 }
             }
         )
@@ -86,10 +104,13 @@ def createCustomer(customer_dict):
     customer = {
         'customer_id': customer_id,
         'first_name': first_name,
-        'last_name': last_name,        
+        'last_name': last_name, 
         'email': email,
         'dob': dob,
         'gender': gender,
+        'customer_number': customer_number,
+        'card_number': card_number,
+        'phone': phone,
         'status' : 'CREATED OK'
     }
     return json.dumps({'customers': customer})
@@ -99,7 +120,10 @@ def updateCustomer(customer_id, customer_dict):
     last_name = str(customer_dict['last_name'])
     email = str(customer_dict['email'])
     dob = str(customer_dict['dob'])
-    gender = str(customer_dict['gender'])    
+    gender = str(customer_dict['gender'])
+    customer_number = str(customer_dict['customer_number'])
+    card_number = str(customer_dict['card_number'])
+    phone = str(customer_dict['phone'])
     response = dynamodb.update_item(
         TableName=table_name,
         Key={
@@ -107,11 +131,14 @@ def updateCustomer(customer_id, customer_dict):
                 'S': customer_id
             }
         },
-        UpdateExpression="""SET first_name = :p_first_name, 
+        UpdateExpression="""SET first_name = :p_first_name,
                                 last_name = :p_last_name,
                                 email = :p_email,
-                                dob = :p_dob,                                
-                                gender = :p_gender
+                                dob = :p_dob,
+                                gender = :p_gender,
+                                customer_number = :p_customer_number,
+                                card_number = :p_card_number,
+                                phone = :p_phone
                                 """,
         ExpressionAttributeValues={
             ':p_first_name': {
@@ -125,10 +152,19 @@ def updateCustomer(customer_id, customer_dict):
             },
             ':p_dob': {
                 'S' : dob
-            },            
+            },
             ':p_gender': {
                 'S' : gender
-            }              
+            },
+            ':p_customer_number': {
+                'S' : customer_number
+            },
+            ':p_card_number': {
+                'S' : card_number
+            },
+            ':p_phone': {
+                'S' : phone
+            }
         }
     )
     # logger.info("Logger Response: ")
@@ -138,7 +174,10 @@ def updateCustomer(customer_id, customer_dict):
         'last_name': last_name,
         'email': email,
         'dob': dob,
-        'gender': gender,        
+        'gender': gender,
+        'customer_number': customer_number,
+        'card_number': card_number,
+        'phone': phone,
         'status' : 'UPDATED OK'
     }
     return json.dumps({'customers': customer})
