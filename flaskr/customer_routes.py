@@ -73,6 +73,7 @@ def create_customer():
     try:
         customer_dict = json.loads(request.data)
         # note: uncomment this to use static db
+
         customer = {
             'customer_id': str(uuid.uuid4()),
             'first_name': customer_dict['first_name'],
@@ -103,6 +104,7 @@ def update_customer(customer_id):
     try:
         customer_dict = json.loads(request.data)
         # note: uncomment this to use static db      
+
         customer = [c for c in customers if c['customer_id'] == customer_id]
         customer[0]['first_name'] = request.json.get('first_name', customer[0]['first_name'])
         customer[0]['last_name'] = request.json.get('last_name', customer[0]['last_name'])

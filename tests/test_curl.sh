@@ -31,7 +31,10 @@ curl -X POST \
   "last_name": "New Customer Last Name",
   "email": "first.last@example.com", 
   "dob": "February 1, 1900",    
-  "gender": "Female"
+  "gender": "Female",
+  "customer_number" : "0999962019111904",
+  "card_number" : "6236332019111900014",
+  "phone" : "97667324"
 }'
 echo
 echo
@@ -46,7 +49,10 @@ curl -X PUT \
   "last_name": "New Customer Last Name v2",
   "email": "first.last@example.com v2", 
   "dob": "February 1, 1900 v2",    
-  "gender": "Female v2"
+  "gender": "Female v2",
+  "customer_number" : "0999962019111904 v2",
+  "card_number" : "6236332019111900014 v2",
+  "phone" : "97667324 v2"
 }'
 echo
 echo

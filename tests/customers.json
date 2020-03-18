@@ -1,26 +1,35 @@
 [
   {
-    "customer_id": "4e53920c-505a-4a90-a694-b9300791f0ae",
-    "first_name": "Barnie",
-    "last_name": "Whittam",
-    "email": "bwhittam0@cpanel.net",
+    "customer_id" : "4e53920c-505a-4a90-a694-b9300791f0ae",
+    "first_name" : "Barnie",
+    "last_name" : "Whittam",
+    "email" : "bwhittam0@cpanel.net",
     "dob" : "December 31, 1999",
-    "gender" : "Male"
+    "gender" : "Male",
+    "customer_number" : "0999962019111901",
+    "card_number" : "6236332019111900010",
+    "phone" : "97667321"
   },
   {
-    "customer_id": "2b473002-36f8-4b87-954e-9a377e0ccbec",
-    "first_name": "Emelyne",
-    "last_name": "Plumley",
-    "email": "eplumley1@wikipedia.org",
+    "customer_id" : "2b473002-36f8-4b87-954e-9a377e0ccbec",
+    "first_name" : "Emelyne",
+    "last_name" : "Plumley",
+    "email" : "eplumley1@wikipedia.org",
     "dob" : "January 1, 2000",
-    "gender" : "Female"
+    "gender" : "Female",
+    "customer_number" : "0999962019111902",
+    "card_number" : "6236332019111900012",
+    "phone" : "97667322"
   },
   {
-    "customer_id": "3f0f196c-4a7b-43af-9e29-6522a715342d",
-    "first_name": "Linoel",
-    "last_name": "Dafter",
-    "email": "ldafter2@ucsd.edu",
+    "customer_id" : "3f0f196c-4a7b-43af-9e29-6522a715342d",
+    "first_name" : "Linoel",
+    "last_name" : "Dafter",
+    "email" : "ldafter2@ucsd.edu",
     "dob" : "June 15, 1980",
-    "gender" : "Male"
-  }  
+    "gender" : "Male",
+    "customer_number" : "0999962019111903",
+    "card_number" : "6236332019111900013",
+    "phone" : "97667323"
+  }
 ]
