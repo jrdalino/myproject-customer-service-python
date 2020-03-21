@@ -3,57 +3,30 @@ import unittest
 import boto3
 import sys 
 
-
 from moto import mock_dynamodb2
 from flaskr.customer_table_client import getAllCustomers, getCustomer, \
 	createCustomer, updateCustomer, deleteCustomer
 
-from flaskr.db import get_db_client
 import json
+import os
+
+# Load customers static db from json file
+THIS_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+my_file = os.path.join(THIS_FOLDER, "tests", 'customers.json')
+
+with open(my_file) as f:
+    customers = json.load(f)
+
 
 class TestDynamo(unittest.TestCase):
 
 		def setUp(self):
 			self.table_name = 'customers'
 
+			# load the test data from test/customers.json
 			self.customer_data = {
-				"customers": [
-					{
-						"customer_id" : "4e53920c-505a-4a90-a694-b9300791f0ae",
-						"first_name" : "Barnie",
-						"last_name" : "Whittam",
-						"email" : "bwhittam0@cpanel.net",
-						"dob" : "December 31, 1999",
-						"gender" : "Male",
-						"customer_number" : "0999962019111901",
-						"card_number" : "6236332019111900010",
-						"phone" : "97667321"
-					},
-					{
-						"customer_id" : "2b473002-36f8-4b87-954e-9a377e0ccbec",
-						"first_name" : "Emelyne",
-						"last_name" : "Plumley",
-						"email" : "eplumley1@wikipedia.org",
-						"dob" : "January 1, 2000",
-						"gender" : "Female",
-						"customer_number" : "0999962019111902",
-						"card_number" : "6236332019111900012",
-						"phone" : "97667322"
-					},
-					{
-						"customer_id" : "3f0f196c-4a7b-43af-9e29-6522a715342d",
-						"first_name" : "Linoel",
-						"last_name" : "Dafter",
-						"email" : "ldafter2@ucsd.edu",
-						"dob" : "June 15, 1980",
-						"gender" : "Male",
-						"customer_number" : "0999962019111903",
-						"card_number" : "6236332019111900013",
-						"phone" : "97667323"
-					}
-				]
+				"customers": customers
 			}
-			self.dynamodb = get_db_client()
 
 			self.test_customer_id = '4e53920c-505a-4a90-a694-b9300791f0ae'
 			self.test_delete_customer_id = "2b473002-36f8-4b87-954e-9a377e0ccbec"
@@ -74,7 +47,6 @@ class TestDynamo(unittest.TestCase):
 		@mock_dynamodb2
 		def __moto_dynamodb_setup(self):
 				
-
 				table_name = 'customers'
 				dynamodb = boto3.resource('dynamodb', 'ap-southeast-2')
 
