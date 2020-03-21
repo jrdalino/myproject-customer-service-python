@@ -1,3 +1,4 @@
+
 # myproject-customer-service-python
 
 ## Functional Requirements
@@ -115,6 +116,46 @@ $ coverage run -m pytest
 $ coverage report
 $ coverage html # open htmlcov/index.html in a browser
 ```
+
+
+## Testing 
+
+#### Set up
+- Add tests using curl ~/environment/myproject-customer-service/tests/test_curl.sh
+- Replace hostname and port variables
+- Run tests using curl
+```
+$ cd ~/environment/myproject-customer-service/tests
+$ chmod a+x test_curl.sh
+$ ./test_curl.sh
+```
+
+- Install pytest, coverage to test and measure your code
+```
+(venv) $ venv/bin/pip install pytest coverage
+```
+- Install pytest-flask and moto to mock your flask server and mock dynamodb 
+```
+(venv) $ venv/bin/pip install pytest-flask moto
+```
+
+### Testing files:
+- Add static database `~/environment/myproject-customer-service/tests/customers.json`
+- Add tests for factory `~/environment/myproject-customer-service/tests/test_factory.py`
+- Add tests for database `~/environment/myproject-customer-service/tests/test_db.py`
+- Add tests for customer routes `~/environment/myproject-customer-service/tests/test_customer_routes.py`
+- Run tests and measure code coverage
+
+### Run
+```
+$ pytest
+$ coverage run -m pytest
+$ coverage report
+$ coverage html # open htmlcov/index.html in a browser
+```
+
+
+
 
 ## Containerize
 - Generate ~/environment/myproject-customer-service/flaskr/requirements.txt
