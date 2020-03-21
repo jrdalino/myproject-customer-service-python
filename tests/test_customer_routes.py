@@ -148,16 +148,15 @@ class TestDynamo(unittest.TestCase):
 
 				customer = createCustomer(self.test_customer_dict)
 
+				# check if the status is CREATED OK
+				self.assertEqual(json.loads(customer)['customers']['status'], "CREATED OK")
+
 				created_id = json.loads(customer)['customers']['data']['customer_id']
 
 				customer_get = getCustomer(created_id)
 
 				# check if the data key matches the created customer object
 				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customer_get)['customers']['data'])
-
-
-				# check if the status is CREATED OK
-				self.assertEqual(json.loads(customer)['customers']['status'], "CREATED OK")
 
 
 
@@ -168,17 +167,15 @@ class TestDynamo(unittest.TestCase):
 
 				customer = updateCustomer(self.test_customer_id, self.test_customer_dict)
 
+				# check if the status is UPDATED OK
+				self.assertEqual(json.loads(customer)['customers']['status'], "UPDATED OK")
+
 				created_id = json.loads(customer)['customers']['data']['customer_id']
 
 				customer_get = getCustomer(created_id)
 
 				# check if the data key matches the updated customer object
 				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customer_get)['customers']['data'])
-
-
-				# check if the status is UPDATED OK
-				self.assertEqual(json.loads(customer)['customers']['status'], "UPDATED OK")
-
 
 
 		@mock_dynamodb2
@@ -188,16 +185,15 @@ class TestDynamo(unittest.TestCase):
 
 				customer = deleteCustomer(self.test_delete_customer_id)
 
+				# check if the status is DELETED OK
+				self.assertEqual(json.loads(customer)['customers']['status'], "DELETED OK")
+
 				deleted_id = json.loads(customer)['customers']['data']['customer_id']
 
 				customer_get = getCustomer(deleted_id)
 
 				# check if the customer_id matches the deleted object
 				self.assertEqual(deleted_id, self.test_delete_customer_id)
-
-				# check if the status is DELETED OK
-				self.assertEqual(json.loads(customer)['customers']['status'], "DELETED OK")
-
 
 				# check if the customer exists will fail if existing
 				self.assertEqual(json.loads(customer_get)['customers']['status'], "Customer not found")
