@@ -134,12 +134,6 @@ class TestDynamo(unittest.TestCase):
 
 				test_customer = [c for c in self.customer_data['customers'] if c['customer_id'] == self.test_customer_id]
 				
-
-				print(json.loads(customer)['customers']['data'])
-				print(test_customer[0])
-
-
-
 				# check if the data matches the sample data
 				self.assertEqual(json.loads(customer)['customers']['data'], test_customer[0])
 
