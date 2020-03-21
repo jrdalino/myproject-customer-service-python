@@ -14,49 +14,61 @@ import json
 class TestDynamo(unittest.TestCase):
 
 		def setUp(self):
-				self.table_name = 'customers'
+			self.table_name = 'customers'
 
-				self.customer_data = {
-					"customers": [
-						{
-							"customer_id": "4e53920c-505a-4a90-a694-b9300791f0ae",
-							"first_name": "Barnie",
-							"last_name": "Whittam",
-							"email": "bwhittam0@cpanel.net",
-							"dob": "December 31, 1999",
-							"gender": "Male"
-						},
-						{
-							"customer_id": "2b473002-36f8-4b87-954e-9a377e0ccbec",
-							"first_name": "Emelyne",
-							"last_name": "Plumley",
-							"email": "eplumley1@wikipedia.org",
-							"dob": "January 1, 2000",
-							"gender": "Female"
-						},
-						{
-							"customer_id": "3f0f196c-4a7b-43af-9e29-6522a715342d",
-							"first_name": "Linoel",
-							"last_name": "Dafter",
-							"email": "ldafter2@ucsd.edu",
-							"dob": "June 15, 1980",
-							"gender": "Male"
-						}
-					]
-				}
-				self.dynamodb = get_db_client()
+			self.customer_data = {
+				"customers": [
+					{
+						"customer_id" : "4e53920c-505a-4a90-a694-b9300791f0ae",
+						"first_name" : "Barnie",
+						"last_name" : "Whittam",
+						"email" : "bwhittam0@cpanel.net",
+						"dob" : "December 31, 1999",
+						"gender" : "Male",
+						"customer_number" : "0999962019111901",
+						"card_number" : "6236332019111900010",
+						"phone" : "97667321"
+					},
+					{
+						"customer_id" : "2b473002-36f8-4b87-954e-9a377e0ccbec",
+						"first_name" : "Emelyne",
+						"last_name" : "Plumley",
+						"email" : "eplumley1@wikipedia.org",
+						"dob" : "January 1, 2000",
+						"gender" : "Female",
+						"customer_number" : "0999962019111902",
+						"card_number" : "6236332019111900012",
+						"phone" : "97667322"
+					},
+					{
+						"customer_id" : "3f0f196c-4a7b-43af-9e29-6522a715342d",
+						"first_name" : "Linoel",
+						"last_name" : "Dafter",
+						"email" : "ldafter2@ucsd.edu",
+						"dob" : "June 15, 1980",
+						"gender" : "Male",
+						"customer_number" : "0999962019111903",
+						"card_number" : "6236332019111900013",
+						"phone" : "97667323"
+					}
+				]
+			}
+			self.dynamodb = get_db_client()
 
-				self.test_customer_id = '4e53920c-505a-4a90-a694-b9300791f0ae'
-				self.test_delete_customer_id = "2b473002-36f8-4b87-954e-9a377e0ccbec"
+			self.test_customer_id = '4e53920c-505a-4a90-a694-b9300791f0ae'
+			self.test_delete_customer_id = "2b473002-36f8-4b87-954e-9a377e0ccbec"
 
 
-				self.test_customer_dict = {
-						"first_name": "Mikhael",
-						"last_name": "Cuazon",
-						"email": "Mikhael@cpanel.net",
-						"dob": "January 17, 1996",
-						"gender": "Male"
-				}
+			self.test_customer_dict = {
+					"first_name": "Mikhael",
+					"last_name": "Cuazon",
+					"email": "Mikhael@cpanel.net",
+					"dob": "January 17, 1996",
+					"gender": "Male",
+					"customer_number" : "0999962019111902",
+					"card_number" : "6236332019111900012",
+					"phone" : "97667322"
+			}
 
 
 		@mock_dynamodb2
@@ -97,6 +109,9 @@ class TestDynamo(unittest.TestCase):
 						item['email'] = customer['email']
 						item['dob'] = customer['dob']
 						item['gender'] = customer['gender']
+						item['customer_number'] = customer['customer_number']
+						item['card_number'] = customer['card_number']
+						item['phone'] = customer['phone']												
 						table.put_item(Item=item)
 
 
@@ -118,7 +133,13 @@ class TestDynamo(unittest.TestCase):
 				customer = getCustomer(self.test_customer_id)
 
 				test_customer = [c for c in self.customer_data['customers'] if c['customer_id'] == self.test_customer_id]
-			
+				
+
+				print(json.loads(customer)['customers']['data'])
+				print(test_customer[0])
+
+
+
 				# check if the data matches the sample data
 				self.assertEqual(json.loads(customer)['customers']['data'], test_customer[0])
 
