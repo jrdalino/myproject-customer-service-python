@@ -1,16 +1,7 @@
-#!/usr/bin/env python
-from flask import Flask
-from flask_cors import CORS
+from __init__ import create_app
 
-# Add new blueprints here
-from customer_routes import customer_module
-
-# Initialize the flask application
-app = Flask(__name__)
-CORS(app)
-
-# Add a blueprint for the customers module
-app.register_blueprint(customer_module)
+# Call the create app method
+app = create_app()
 
 # Run the application
 app.run(host="0.0.0.0", port=5000, debug=True)

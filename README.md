@@ -32,7 +32,7 @@ $ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproje
 
 - Follow folder structure as per https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/ and https://github.com/pallets/flask/tree/master/examples/tutorial
 ```
-~/environment/myproject-customer-service
+$ ~/environment/myproject-customer-service
 ├── flaskr/
 │   ├── app.py
 │   ├── auth.py
@@ -89,7 +89,7 @@ $ ./app.py
 $ curl http://localhost:5000
 ```
 
-## Testing (TODO: https://github.com/pallets/flask/tree/master/examples/tutorial/tests) 
+## Testing
 - Add tests using curl ~/environment/myproject-customer-service/tests/test_curl.sh
 - Replace hostname and port variables
 - Run tests using curl
@@ -102,11 +102,14 @@ $ ./test_curl.sh
 ```
 (venv) $ venv/bin/pip install pytest coverage
 ```
+- Install pytest-flask and moto to mock your flask server and mock dynamodb 
+```
+(venv) $ venv/bin/pip install pytest-flask moto
+```
 - Add static database ~/environment/myproject-customer-service/tests/customers.json
-- Add app fixture to call factory and pass test_config for testing ~/environment/myproject-customer-service/tests/conftest.py
 - Add tests for factory ~/environment/myproject-customer-service/tests/test_factory.py
-- Add tests for database ~/environment/myproject-customer-service/tests/test_db.py https://stackoverflow.com/questions/48711004/how-to-mock-aws-dynamodb-service
-- Add tests for other AWS Services https://github.com/spulec/moto
+- Add tests for database ~/environment/myproject-customer-service/tests/test_db.py
+- Add ~/environment/myproject-customer-service/tests/__init__.py
 - Add tests for customer routes ~/environment/myproject-customer-service/tests/test_customer_routes.py
 - Run tests and measure code coverage
 ```
@@ -115,6 +118,7 @@ $ coverage run -m pytest
 $ coverage report
 $ coverage html # open htmlcov/index.html in a browser
 ```
+- TODO: Add tests for other AWS Services https://github.com/spulec/moto
 
 ## Containerize
 - Generate ~/environment/myproject-customer-service/flaskr/requirements.txt
@@ -135,7 +139,6 @@ $ curl http://localhost:5000
 $ aws ecr create-repository --repository-name myproject-customer-service
 ```
 - Push Docker Image to ECR and validate
-
 ```bash
 $ $(aws ecr get-login --no-include-email)
 $ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest

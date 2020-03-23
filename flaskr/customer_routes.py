@@ -2,8 +2,15 @@ import os
 import uuid
 from flask import Blueprint
 from flask import Flask, json, Response, request, abort
-from custom_logger import setup_logger
-import customer_table_client
+# Add new blueprints here
+if __package__ is None or __package__ == '':
+    # uses current directory visibility
+    import customer_table_client
+    from custom_logger import setup_logger
+else:
+    # uses current package visibility
+    from flaskr import customer_table_client
+    from flaskr.custom_logger import setup_logger
 
 # Set up the custom logger and the Blueprint
 logger = setup_logger(__name__)
@@ -33,7 +40,7 @@ def get_all_customers():
         serviceResponse = customer_table_client.getAllCustomers()
     except Exception as e:
         logger.error(e)
-        abort(404)
+        abort(400)
     resp = Response(serviceResponse)
     resp.headers["Content-Type"] = "application/json"
     return resp
@@ -43,14 +50,18 @@ def get_all_customers():
 def get_customer(customer_id):
     try:
         # note: uncomment this to use static db
-        # customer = [c for c in customers if c['customer_id'] == customer_id]
-        # serviceResponse = json.dumps({'customers': customer[0]})
+        customer = [c for c in customers if c['customer_id'] == customer_id]
+        # serviceResponse = json.dumps({'customers': {
+        #         'data': customer[0],
+        #         'status': 'GET OK'
+        #         }
+        #     })
         # note: uncomment this to use dynamodb
         serviceResponse = customer_table_client.getCustomer(customer_id) 
     except Exception as e:
         logger.error(e)
-        abort(404)
-    resp = Response(serviceResponse)
+        abort(400)
+    resp = Response(serviceResponse, 200)
     resp.headers["Content-Type"] = "application/json"
     return resp
 
@@ -73,15 +84,17 @@ def create_customer():
         # }
         # customers.append(customer)
         # serviceResponse = json.dumps({
-        #         'customers': customer,
-        #         'status': 'CREATED OK'
+        #         'customers': {
+        #             'data': customer,
+        #             'status': 'CREATED OK'
+        #             }
         #         })
         # note: uncomment this to use dynamodb
         serviceResponse = customer_table_client.createCustomer(customer_dict)
     except Exception as e:
         logger.error(e)
         abort(400)        
-    resp = Response(serviceResponse)   
+    resp = Response(serviceResponse, 201)   
     resp.headers["Content-Type"] = "application/json"
     return resp
 
@@ -107,19 +120,20 @@ def update_customer(customer_id):
         #     'dob' : request.json.get('dob', customer[0]['dob']),
         #     'gender' : request.json.get('gender', customer[0]['gender']),
         #     'customer_number' : request.json.get('customer_number', customer[0]['customer_number']),
-        #     'card_number' : request.json.get('card_number', customer[0]['card_number']),       
+        #     'card_number' : request.json.get('card_number', customer[0]['card_number']),
         #     'phone' : request.json.get('phone', customer[0]['phone'])
         # }
         # serviceResponse = json.dumps({
-        #         'customers': customer,
-        #         'status': 'UPDATED OK'
+        #         'customers': {
+        #             'data': customer,
+        #             'status': 'UPDATED OK'} 
         #         })
         # note: uncomment this to use dynamodb
         serviceResponse = customer_table_client.updateCustomer(customer_id, customer_dict)
     except Exception as e:
         logger.error(e)
-        abort(404)
-    resp = Response(serviceResponse)
+        abort(400)
+    resp = Response(serviceResponse, 200)
     resp.headers["Content-Type"] = "application/json"
     return resp
 
@@ -130,8 +144,10 @@ def delete_customer(customer_id):
         # note: uncomment this to use static db       
         # customer = [c for c in customers if c['customer_id'] == customer_id]
         # serviceResponse = json.dumps({
-        #         'customers' : customer,
-        #         'status': 'DELETED OK'
+        #         'customers' : {
+        #             'data': customer[0],
+        #             'status': 'DELETED OK'
+        #         }
         #     })
         # customers.remove(customer[0])
         # note: uncomment this to use dynamodb
@@ -139,16 +155,17 @@ def delete_customer(customer_id):
     except Exception as e:
         logger.error(e)
         abort(400)
-    resp = Response(serviceResponse)
+    resp = Response(serviceResponse, 200)
     resp.headers["Content-Type"] = "application/json"
     return resp
-
-@customer_module.errorhandler(404)
-def item_not_found(e):
-    # note that we set the 404 status explicitly
-    return json.dumps({'error': 'Customer not found'}), 404
 
 @customer_module.errorhandler(400)
 def bad_request(e):
     # note that we set the 400 status explicitly
-    return json.dumps({'error': 'Bad request'}), 400
+    errorResponse = json.dumps({'customers': {
+        'data': {},
+        'status': 'Bad request'
+        }})
+    resp = Response(errorResponse, 400)
+    resp.headers["Content-Type"] = "application/json"
+    return resp
