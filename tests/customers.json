@@ -1,35 +1,48 @@
 [
   {
-    "customer_id" : "4e53920c-505a-4a90-a694-b9300791f0ae",
-    "first_name" : "Barnie",
-    "last_name" : "Whittam",
+    "customerId" : "4e53920c-505a-4a90-a694-b9300791f0ae",
+    "firstName" : "Barnie",
+    "lastName" : "Whittam",
     "email" : "bwhittam0@cpanel.net",
-    "dob" : "December 31, 1999",
+    "userName" : "bwhittam0@cpanel.net",
+    "birthDate" : "December 31, 1999",
     "gender" : "Male",
-    "customer_number" : "0999962019111901",
-    "card_number" : "6236332019111900010",
-    "phone" : "97667321"
+    "custNumber" : "0999962019111901",
+    "cardNumber" : "6236332019111900010",
+    "phoneNumber" : "97667321",
+    "createdDate": "March 27, 2020",
+    "updatedDate": "March 27, 2020",
+    "profilePhotoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/600px-PICA.jpg"
+
   },
   {
-    "customer_id" : "2b473002-36f8-4b87-954e-9a377e0ccbec",
-    "first_name" : "Emelyne",
-    "last_name" : "Plumley",
+    "customerId" : "2b473002-36f8-4b87-954e-9a377e0ccbec",
+    "firstName" : "Emelyne",
+    "lastName" : "Plumley",
     "email" : "eplumley1@wikipedia.org",
-    "dob" : "January 1, 2000",
+    "userName" : "eplumley1@wikipedia.org",
+    "birthDate" : "January 1, 2000",
     "gender" : "Female",
-    "customer_number" : "0999962019111902",
-    "card_number" : "6236332019111900012",
-    "phone" : "97667322"
+    "custNumber" : "0999962019111902",
+    "cardNumber" : "6236332019111900012",
+    "phoneNumber" : "97667322",
+    "createdDate": "March 27, 2020",
+    "updatedDate": "March 27, 2020",
+    "profilePhotoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/600px-PICA.jpg"
   },
   {
-    "customer_id" : "3f0f196c-4a7b-43af-9e29-6522a715342d",
-    "first_name" : "Linoel",
-    "last_name" : "Dafter",
+    "customerId" : "3f0f196c-4a7b-43af-9e29-6522a715342d",
+    "firstName" : "Linoel",
+    "lastName" : "Dafter",
     "email" : "ldafter2@ucsd.edu",
-    "dob" : "June 15, 1980",
+    "userName" : "ldafter2@ucsd.edu",
+    "birthDate" : "June 15, 1980",
     "gender" : "Male",
-    "customer_number" : "0999962019111903",
-    "card_number" : "6236332019111900013",
-    "phone" : "97667323"
+    "custNumber" : "0999962019111903",
+    "cardNumber" : "6236332019111900013",
+    "phoneNumber" : "97667323",
+    "createdDate": "March 27, 2020",
+    "updatedDate": "March 27, 2020",
+    "profilePhotoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/600px-PICA.jpg"
   }
 ]

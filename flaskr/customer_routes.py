@@ -45,19 +45,19 @@ def get_all_customers():
     resp.headers["Content-Type"] = "application/json"
     return resp
 
-# Get customer by customer_id
-@customer_module.route("/customers/<string:customer_id>", methods=['GET'])
-def get_customer(customer_id):
+# Get customer by customerId
+@customer_module.route("/customers/<string:customerId>", methods=['GET'])
+def get_customer(customerId):
     try:
         # note: uncomment this to use static db
-        customer = [c for c in customers if c['customer_id'] == customer_id]
+        # customer = [c for c in customers if c['customerId'] == customerId]
         # serviceResponse = json.dumps({'customers': {
         #         'data': customer[0],
         #         'status': 'GET OK'
         #         }
         #     })
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.getCustomer(customer_id) 
+        serviceResponse = customer_table_client.getCustomer(customerId) 
     except Exception as e:
         logger.error(e)
         abort(400)
@@ -69,18 +69,22 @@ def get_customer(customer_id):
 @customer_module.route("/customers", methods=['POST'])
 def create_customer():
     try:
-        customer_dict = json.loads(request.data)
+        customerDict = json.loads(request.data)
         # note: uncomment this to use static db
         # customer = {
-        #     'customer_id': str(uuid.uuid4()),
-        #     'first_name': customer_dict['first_name'],
-        #     'last_name': customer_dict['last_name'],
-        #     'email': customer_dict['email'],
-        #     'dob': customer_dict['dob'],
-        #     'gender': customer_dict['gender'],
-        #     'customer_number': customer_dict['customer_number'],
-        #     'card_number': customer_dict['card_number'],
-        #     'phone': customer_dict['phone']
+        #     'customerId': str(uuid.uuid4()),
+        #     'firstName': customerDict['firstName'],
+        #     'lastName': customerDict['lastName'],
+        #     'email': customerDict['email'],
+        #     'userName': customerDict['userName'],        
+        #     'birthDate': customerDict['birthDate'],
+        #     'gender': customerDict['gender'],
+        #     'custNumber': customerDict['custNumber'],
+        #     'cardNumber': customerDict['cardNumber'],
+        #     'phoneNumber': customerDict['phoneNumber'],
+        #     'createdDate': customerDict['createdDate'],
+        #     'updatedDate': customerDict['updatedDate'],
+        #     'profilePhotoUrl': customerDict['profilePhotoUrl']
         # }
         # customers.append(customer)
         # serviceResponse = json.dumps({
@@ -90,7 +94,7 @@ def create_customer():
         #             }
         #         })
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.createCustomer(customer_dict)
+        serviceResponse = customer_table_client.createCustomer(customerDict)
     except Exception as e:
         logger.error(e)
         abort(400)        
@@ -98,30 +102,37 @@ def create_customer():
     resp.headers["Content-Type"] = "application/json"
     return resp
 
-# Update customer by customer_id
-@customer_module.route("/customers/<customer_id>", methods=['PUT'])
-def update_customer(customer_id):
+# Update customer by customerId
+@customer_module.route("/customers/<customerId>", methods=['PUT'])
+def update_customer(customerId):
     try:
-        customer_dict = json.loads(request.data)
+        customerDict = json.loads(request.data)
         # note: uncomment this to use static db      
-        # customer = [c for c in customers if c['customer_id'] == customer_id]
-        # customer[0]['first_name'] = request.json.get('first_name', customer[0]['first_name'])
-        # customer[0]['last_name'] = request.json.get('last_name', customer[0]['last_name'])
+        # customer = [c for c in customers if c['customerId'] == customerId]
+        # customer[0]['firstName'] = request.json.get('firstName', customer[0]['firstName'])
+        # customer[0]['lastName'] = request.json.get('lastName', customer[0]['lastName'])
         # customer[0]['email'] = request.json.get('email', customer[0]['email'])
-        # customer[0]['dob'] = request.json.get('dob', customer[0]['dob'])
+        # customer[0]['userName'] = request.json.get('userName', customer[0]['userName'])        
+        # customer[0]['birthDate'] = request.json.get('birthDate', customer[0]['birthDate'])
         # customer[0]['gender'] = request.json.get('gender', customer[0]['gender'])
-        # customer[0]['customer_number'] = request.json.get('customer_number', customer[0]['customer_number'])
-        # customer[0]['card_number'] = request.json.get('card_number', customer[0]['card_number'])
-        # customer[0]['phone'] = request.json.get('phone', customer[0]['phone'])
+        # customer[0]['custNumber'] = request.json.get('custNumber', customer[0]['custNumber'])
+        # customer[0]['cardNumber'] = request.json.get('cardNumber', customer[0]['cardNumber'])
+        # customer[0]['phoneNumber'] = request.json.get('phoneNumber', customer[0]['phoneNumber'])
+        # customer[0]['createdDate'] = request.json.get('createdDate', customer[0]['createdDate'])
+        # customer[0]['updatedDate'] = request.json.get('updatedDate', customer[0]['updatedDate'])
+        # customer[0]['profilePhotoUrl'] = request.json.get('profilePhotoUrl', customer[0]['profilePhotoUrl'])     
         # customer = {
-        #     'first_name' : request.json.get('first_name', customer[0]['first_name']),
-        #     'last_name' : request.json.get('last_name', customer[0]['last_name']),
+        #     'firstName' : request.json.get('firstName', customer[0]['firstName']),
+        #     'lastName' : request.json.get('lastName', customer[0]['lastName']),
         #     'email' : request.json.get('email', customer[0]['email']),
-        #     'dob' : request.json.get('dob', customer[0]['dob']),
+        #     'userName' : request.json.get('userName', customer[0]['userName']),        
+        #     'birthDate' : request.json.get('birthDate', customer[0]['birthDate']),
         #     'gender' : request.json.get('gender', customer[0]['gender']),
-        #     'customer_number' : request.json.get('customer_number', customer[0]['customer_number']),
-        #     'card_number' : request.json.get('card_number', customer[0]['card_number']),
-        #     'phone' : request.json.get('phone', customer[0]['phone'])
+        #     'custNumber' : request.json.get('custNumber', customer[0]['custNumber']),
+        #     'cardNumber' : request.json.get('cardNumber', customer[0]['cardNumber']),
+        #     'phoneNumber' : request.json.get('phoneNumber', customer[0]['phoneNumber']),
+        #     'createdDate' : request.json.get('createdDate', customer[0]['createdDate']),
+        #     'profilePhotoUrl' : request.json.get('profilePhotoUrl', customer[0]['profilePhotoUrl'])    
         # }
         # serviceResponse = json.dumps({
         #         'customers': {
@@ -129,7 +140,7 @@ def update_customer(customer_id):
         #             'status': 'UPDATED OK'} 
         #         })
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.updateCustomer(customer_id, customer_dict)
+        serviceResponse = customer_table_client.updateCustomer(customerId, customerDict)
     except Exception as e:
         logger.error(e)
         abort(400)
@@ -137,12 +148,12 @@ def update_customer(customer_id):
     resp.headers["Content-Type"] = "application/json"
     return resp
 
-# Delete customer by customer_id
-@customer_module.route("/customers/<customer_id>", methods=['DELETE'])
-def delete_customer(customer_id):
+# Delete customer by customerId
+@customer_module.route("/customers/<customerId>", methods=['DELETE'])
+def delete_customer(customerId):
     try:
         # note: uncomment this to use static db       
-        # customer = [c for c in customers if c['customer_id'] == customer_id]
+        # customer = [c for c in customers if c['customerId'] == customerId]
         # serviceResponse = json.dumps({
         #         'customers' : {
         #             'data': customer[0],
@@ -151,7 +162,7 @@ def delete_customer(customer_id):
         #     })
         # customers.remove(customer[0])
         # note: uncomment this to use dynamodb
-        serviceResponse = customer_table_client.deleteCustomer(customer_id)
+        serviceResponse = customer_table_client.deleteCustomer(customerId)
     except Exception as e:
         logger.error(e)
         abort(400)

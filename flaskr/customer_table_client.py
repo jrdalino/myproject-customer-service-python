@@ -4,6 +4,7 @@ import logging
 from collections import defaultdict
 import argparse
 import uuid
+import time
 if __package__ is None or __package__ == '':
 	# uses current directory visibility
 	from custom_logger import setup_logger
@@ -14,38 +15,42 @@ else:
 	from flaskr.db import get_db_client
 
 logger = setup_logger(__name__)
-table_name = 'customers'
+tableName = 'customers'
 
 def getAllCustomers():
 	dynamodb = get_db_client()
 	response = dynamodb.scan(
-		TableName=table_name
+		TableName=tableName
 	)
 	# logger.info("Logger Response: ")
 	# logger.info(response)    
-	customer_list = defaultdict(list)
+	customerList = defaultdict(list)
 	for item in response["Items"]:
 		customer = {
-			'customer_id': item["customer_id"]["S"],
-			'first_name': item['first_name']['S'],
-			'last_name': item['last_name']['S'],
+			'customerId': item['customerId']['S'],
+			'firstName': item['firstName']['S'],
+			'lastName': item['lastName']['S'],
 			'email': item['email']['S'],
-			'dob': item['dob']['S'],
+			'userName': item['userName']['S'],
+			'birthDate': item['birthDate']['S'],
 			'gender': item['gender']['S'],
-			'customer_number': item['customer_number']['S'],
-			'card_number': item['card_number']['S'],
-			'phone': item['phone']['S'],
+			'custNumber': item['custNumber']['S'],
+			'cardNumber': item['cardNumber']['S'],
+			'phoneNumber': item['phoneNumber']['S'],
+			'createdDate': item['createdDate']['S'],
+			'updatedDate': item['updatedDate']['S'],
+			'profilePhotoUrl': item['profilePhotoUrl']['S'],
 		}
-		customer_list["customers"].append(customer)
-	return json.dumps(customer_list)
+		customerList["customers"].append(customer)
+	return json.dumps(customerList)
 
-def getCustomer(customer_id):
+def getCustomer(customerId):
 	dynamodb = get_db_client()
 	response = dynamodb.get_item(
-		TableName=table_name,
+		TableName=tableName,
 		Key={
-			'customer_id': {
-				'S': customer_id
+			'customerId': {
+				'S': customerId
 			}
 		}
 	)
@@ -54,15 +59,19 @@ def getCustomer(customer_id):
 	if 'Item' in response:
 		item = response['Item']
 		customer = {
-			'customer_id': item["customer_id"]["S"],
-			'first_name': item['first_name']['S'],
-			'last_name': item['last_name']['S'],
+			'customerId': item['customerId']['S'],
+			'firstName': item['firstName']['S'],
+			'lastName': item['lastName']['S'],
 			'email': item['email']['S'],
-			'dob': item['dob']['S'],
+			'userName': item['userName']['S'],
+			'birthDate': item['birthDate']['S'],
 			'gender': item['gender']['S'],
-			'customer_number': item['customer_number']['S'],
-			'card_number': item['card_number']['S'],
-			'phone': item['phone']['S'],
+			'custNumber': item['custNumber']['S'], 
+			'cardNumber': item['cardNumber']['S'], 
+			'phoneNumber': item['phoneNumber']['S'],
+			'createdDate': item['createdDate']['S'],
+			'updatedDate': item['updatedDate']['S'],
+			'profilePhotoUrl': item['profilePhotoUrl']['S'],
 		}
 		return json.dumps({'customers': {
 			'data' : customer,
@@ -76,117 +85,157 @@ def getCustomer(customer_id):
 			}
 		})
 
-def createCustomer(customer_dict):
+def createCustomer(customerDict):
 	dynamodb = get_db_client()
-	customer_id = str(uuid.uuid4())
-	first_name = str(customer_dict['first_name'])
-	last_name = str(customer_dict['last_name'])
-	email = str(customer_dict['email'])
-	dob = str(customer_dict['dob'])
-	gender = str(customer_dict['gender'])
-	customer_number = str(customer_dict['customer_number'])
-	card_number = str(customer_dict['card_number'])
-	phone = str(customer_dict['phone'])
+	customerId = str(uuid.uuid4())
+	firstName = str(customerDict['firstName'])
+	lastName = str(customerDict['lastName'])
+	email = str(customerDict['email'])
+	userName = str(customerDict['userName'])
+	birthDate = str(customerDict['birthDate'])
+	gender = str(customerDict['gender'])
+	custNumber = str(customerDict['custNumber']) # generate randon custNumber
+	cardNumber = str(customerDict['cardNumber']) # generate randp, cardNumber
+	phoneNumber = str(customerDict['phoneNumber'])
+	createdDate = str(time.time()) # str(customerDict['createdDate'])
+	updatedDate = str(customerDict['updatedDate'])
+	profilePhotoUrl = str(customerDict['profilePhotoUrl'])
 	response = dynamodb.put_item(
-		TableName=table_name,
+		TableName=tableName,
 		Item={
-				'customer_id': {
-					'S': customer_id
+				'customerId': {
+					'S': customerId
 				},
-				'first_name': {
-					'S' : first_name
+				'firstName': {
+					'S' : firstName
 				},
-				'last_name': {
-					'S' : last_name
+				'lastName': {
+					'S' : lastName
 				},                
 				'email' : {
 					'S' : email
 				},
-				'dob': {
-					'S' : dob
+				'userName' : {
+					'S' : userName
+				},
+				'birthDate': {
+					'S' : birthDate
 				},
 				'gender': {
 					'S' : gender
 				},
-				'customer_number': {
-					'S' : customer_number
+				'custNumber': {
+					'S' : custNumber
 				},
-				'card_number': {
-					'S' : card_number
+				'cardNumber': {
+					'S' : cardNumber
 				},
-				'phone': {
-					'S' : phone
-				}
+				'phoneNumber': {
+					'S' : phoneNumber
+				},
+				'createdDate': {
+					'S' : createdDate
+				},
+				'updatedDate': {
+					'S' : updatedDate
+				},
+				'profilePhotoUrl': {
+					'S' : profilePhotoUrl
+				}				
 			}
 		)
 	# logger.info("Logger Response: ")
 	# logger.info(response)
 	customer = {
 		'data' : {
-			'customer_id': customer_id,
-			'first_name': first_name,
-			'last_name': last_name,
+			'customerId': customerId,
+			'firstName': firstName,
+			'lastName': lastName,
 			'email': email,
-			'dob': dob,
+			'userName': userName,
+			'birthDate': birthDate,
 			'gender': gender,
-			'customer_number': customer_number,
-			'card_number': card_number,
-			'phone': phone,
+			'custNumber': custNumber,
+			'cardNumber': cardNumber,
+			'phoneNumber': phoneNumber,
+			'createdDate': createdDate,
+			'updatedDate': updatedDate,
+			'profilePhotoUrl': profilePhotoUrl,
 		},
 		'status' : 'CREATED OK'
 	}
 	return json.dumps({'customers': customer})
 
-def updateCustomer(customer_id, customer_dict):
+def updateCustomer(customerId, customerDict):
 	dynamodb = get_db_client()
-	first_name = str(customer_dict['first_name'])
-	last_name = str(customer_dict['last_name'])
-	email = str(customer_dict['email'])
-	dob = str(customer_dict['dob'])
-	gender = str(customer_dict['gender'])
-	customer_number = str(customer_dict['customer_number'])
-	card_number = str(customer_dict['card_number'])
-	phone = str(customer_dict['phone'])
+	firstName = str(customerDict['firstName'])
+	lastName = str(customerDict['lastName'])
+	email = str(customerDict['email'])
+	userName = str(customerDict['userName'])
+	birthDate = str(customerDict['birthDate'])
+	gender = str(customerDict['gender'])
+	custNumber = str(customerDict['custNumber'])
+	cardNumber = str(customerDict['cardNumber'])
+	phoneNumber = str(customerDict['phoneNumber'])
+	createdDate = str(customerDict['createdDate'])
+	updatedDate = str(time.time()) # str(customerDict['updatedDate'])
+	profilePhotoUrl = str(customerDict['profilePhotoUrl'])
 	response = dynamodb.update_item(
-		TableName=table_name,
+		TableName=tableName,
 		Key={
-			'customer_id': {
-				'S': customer_id
+			'customerId': {
+				'S': customerId
 			}
 		},
-		UpdateExpression="""SET first_name = :p_first_name,
-								last_name = :p_last_name,
+		UpdateExpression="""SET firstName = :p_firstName,
+								lastName = :p_lastName,
 								email = :p_email,
-								dob = :p_dob,
+								userName = :p_userName,
+								birthDate = :p_birthDate,
 								gender = :p_gender,
-								customer_number = :p_customer_number,
-								card_number = :p_card_number,
-								phone = :p_phone
+								custNumber = :p_custNumber,
+								cardNumber = :p_cardNumber,
+								phoneNumber = :p_phoneNumber,
+								createdDate = :p_createdDate,
+								updatedDate = :p_updatedDate,
+								profilePhotoUrl = :p_profilePhotoUrl
 								""",
 		ExpressionAttributeValues={
-			':p_first_name': {
-				'S' : first_name
+			':p_firstName': {
+				'S' : firstName
 			},
-			':p_last_name' : {
-				'S' : last_name
+			':p_lastName' : {
+				'S' : lastName
 			},
 			':p_email': {
 				'S' : email
 			},
-			':p_dob': {
-				'S' : dob
+			':p_userName': {
+				'S' : userName
+			},
+			':p_birthDate': {
+				'S' : birthDate
 			},
 			':p_gender': {
 				'S' : gender
 			},
-			':p_customer_number': {
-				'S' : customer_number
+			':p_custNumber': {
+				'S' : custNumber
 			},
-			':p_card_number': {
-				'S' : card_number
+			':p_cardNumber': {
+				'S' : cardNumber
 			},
-			':p_phone': {
-				'S' : phone
+			':p_phoneNumber': {
+				'S' : phoneNumber
+			},
+			':p_createdDate': {
+				'S' : createdDate
+			},
+			':p_updatedDate': {
+				'S' : updatedDate
+			},
+			':p_profilePhotoUrl': {
+				'S' : profilePhotoUrl
 			}
 		}
 	)
@@ -194,27 +243,31 @@ def updateCustomer(customer_id, customer_dict):
 	# logger.info(response)
 	customer = {
 		'data' : {
-			'customer_id': customer_id,
-			'first_name': first_name,
-			'last_name': last_name,
+			'customerId': customerId,
+			'firstName': firstName,
+			'lastName': lastName,
 			'email': email,
-			'dob': dob,
+			'userName': userName,
+			'birthDate': birthDate,
 			'gender': gender,
-			'customer_number': customer_number,
-			'card_number': card_number,
-			'phone': phone,
+			'custNumber': custNumber,
+			'cardNumber': cardNumber,
+			'phoneNumber': phoneNumber,
+			'createdDate': createdDate,
+			'updatedDate': updatedDate,
+			'profilePhotoUrl': profilePhotoUrl,
 		},
 		'status' : 'UPDATED OK'
 	}
 	return json.dumps({'customers': customer})
 
-def deleteCustomer(customer_id):
+def deleteCustomer(customerId):
 	dynamodb = get_db_client()
 	response = dynamodb.delete_item(
-		TableName=table_name,
+		TableName=tableName,
 		Key={
-			'customer_id': {
-				'S': customer_id
+			'customerId': {
+				'S': customerId
 			}
 		}
 	)
@@ -222,7 +275,7 @@ def deleteCustomer(customer_id):
 	# logger.info(response)
 	customer = {
 		'data': {
-			'customer_id' : customer_id,
+			'customerId' : customerId,
 		},
 		'status' : 'DELETED OK'
 	}

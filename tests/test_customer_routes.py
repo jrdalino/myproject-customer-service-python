@@ -25,14 +25,18 @@ class TestDynamo(unittest.TestCase):
 			self.test_customer_id = '4e53920c-505a-4a90-a694-b9300791f0ae'
 			self.test_delete_customer_id = "2b473002-36f8-4b87-954e-9a377e0ccbec"
 			self.test_customer_dict = {
-					"first_name": "Mikhael",
-					"last_name": "Cuazon",
+					"firstName": "Mikhael",
+					"lastName": "Cuazon",
 					"email": "Mikhael@cpanel.net",
-					"dob": "January 17, 1996",
+					"userName": "Mikhael@cpanel.net",
+					"birthDate": "January 17, 1996",
 					"gender": "Male",
-					"customer_number" : "0999962019111902",
-					"card_number" : "6236332019111900012",
-					"phone" : "97667322"
+					"custNumber": "0999962019111902",
+					"cardNumber": "6236332019111900012",
+					"phoneNumber": "97667322",
+					"createdDate": "March 27, 2020",
+					"updatedDate": "March 27, 2020",
+					"profilePhotoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/600px-PICA.jpg"
 			}
 
 		@mock_dynamodb2
@@ -43,13 +47,13 @@ class TestDynamo(unittest.TestCase):
 						TableName=table_name,
 						KeySchema=[
 								{
-										'AttributeName': 'customer_id',
+										'AttributeName': 'customerId',
 										'KeyType': 'HASH'
 								},
 						],
 						AttributeDefinitions=[
 								{
-										'AttributeName': 'customer_id',
+										'AttributeName': 'customerId',
 										'AttributeType': 'S'
 								},
 
@@ -61,15 +65,19 @@ class TestDynamo(unittest.TestCase):
 				)
 				for customer in self.customer_data['customers']:
 						item = {}
-						item['customer_id'] = customer['customer_id']
-						item['first_name'] = customer['first_name']
-						item['last_name'] = customer['last_name']
+						item['customerId'] = customer['customerId']
+						item['firstName'] = customer['firstName']
+						item['lastName'] = customer['lastName']
 						item['email'] = customer['email']
-						item['dob'] = customer['dob']
+						item['userName'] = customer['userName']
+						item['birthDate'] = customer['birthDate']
 						item['gender'] = customer['gender']
-						item['customer_number'] = customer['customer_number']
-						item['card_number'] = customer['card_number']
-						item['phone'] = customer['phone']												
+						item['custNumber'] = customer['custNumber']
+						item['cardNumber'] = customer['cardNumber']
+						item['phoneNumber'] = customer['phoneNumber']
+						item['createdDate'] = customer['createdDate']
+						item['updatedDate'] = customer['updatedDate']
+						item['profilePhotoUrl'] = customer['profilePhotoUrl']								
 						table.put_item(Item=item)
 
 		@mock_dynamodb2
@@ -82,9 +90,9 @@ class TestDynamo(unittest.TestCase):
 		def test_get_customer(self):
 				self.__moto_dynamodb_setup()
 				customer = getCustomer(self.test_customer_id)
-				test_customer = [c for c in self.customer_data['customers'] if c['customer_id'] == self.test_customer_id]				
+				testCustomer = [c for c in self.customer_data['customers'] if c['customerId'] == self.test_customer_id]				
 				# check if the data matches the sample data
-				self.assertEqual(json.loads(customer)['customers']['data'], test_customer[0])
+				self.assertEqual(json.loads(customer)['customers']['data'], testCustomer[0])
 				# check if the status is GET OK
 				self.assertEqual(json.loads(customer)['customers']['status'], "GET OK")
 
@@ -94,10 +102,10 @@ class TestDynamo(unittest.TestCase):
 				customer = createCustomer(self.test_customer_dict)
 				# check if the status is CREATED OK
 				self.assertEqual(json.loads(customer)['customers']['status'], "CREATED OK")
-				created_id = json.loads(customer)['customers']['data']['customer_id']
-				customer_get = getCustomer(created_id)
+				createdId = json.loads(customer)['customers']['data']['customerId']
+				customerGet = getCustomer(createdId)
 				# check if the data key matches the created customer object
-				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customer_get)['customers']['data'])
+				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customerGet)['customers']['data'])
 
 		@mock_dynamodb2
 		def test_update_customer(self):
@@ -105,10 +113,10 @@ class TestDynamo(unittest.TestCase):
 				customer = updateCustomer(self.test_customer_id, self.test_customer_dict)
 				# check if the status is UPDATED OK
 				self.assertEqual(json.loads(customer)['customers']['status'], "UPDATED OK")
-				created_id = json.loads(customer)['customers']['data']['customer_id']
-				customer_get = getCustomer(created_id)
+				updatedId = json.loads(customer)['customers']['data']['customerId']
+				customerGet = getCustomer(updatedId)
 				# check if the data key matches the updated customer object
-				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customer_get)['customers']['data'])
+				self.assertEqual(json.loads(customer)['customers']['data'], json.loads(customerGet)['customers']['data'])
 
 		@mock_dynamodb2
 		def test_delete_customer(self):
@@ -116,9 +124,9 @@ class TestDynamo(unittest.TestCase):
 				customer = deleteCustomer(self.test_delete_customer_id)
 				# check if the status is DELETED OK
 				self.assertEqual(json.loads(customer)['customers']['status'], "DELETED OK")
-				deleted_id = json.loads(customer)['customers']['data']['customer_id']
-				customer_get = getCustomer(deleted_id)
-				# check if the customer_id matches the deleted object
-				self.assertEqual(deleted_id, self.test_delete_customer_id)
+				deletedId = json.loads(customer)['customers']['data']['customerId']
+				customerGet = getCustomer(deletedId)
+				# check if the customerId matches the deleted object
+				self.assertEqual(deletedId, self.test_delete_customer_id)
 				# check if the customer exists will fail if existing
-				self.assertEqual(json.loads(customer_get)['customers']['status'], "Customer not found")
+				self.assertEqual(json.loads(customerGet)['customers']['status'], "Customer not found")
