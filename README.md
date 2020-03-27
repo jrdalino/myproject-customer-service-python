@@ -5,11 +5,11 @@
 
 ## API Endpoints
 ```
-| HTTP METHOD | URI                                       | ACTION                       |
-|-------------|-------------------------------------------|------------------------------|
-| GET         | http://[hostname]/customers               | Gets all customers           |
+| HTTP METHOD | URI                                      | ACTION                       |
+|-------------|------------------------------------------|------------------------------|
+| GET         | http://[hostname]/customers              | Gets all customers           |
 | GET         | http://[hostname]/customers/<customerId> | Gets one customer            |
-| POST        | http://[hostname]/customers               | Creates a new customer       |
+| POST        | http://[hostname]/customers              | Creates a new customer       |
 | PUT         | http://[hostname]/customers/<customerId> | Updates an existing customer |
 | DELETE      | http://[hostname]/customers/<customerId> | Deletes a customer           |
 ```
