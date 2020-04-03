@@ -16,7 +16,6 @@
 
 ## Prerequisites
 - Docker, Python, Flask, Git, Virtualenv https://github.com/jrdalino/development-environment-setup
-- Prepare DynamoDB table using https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
 - Setup CI/CD using https://github.com/jrdalino/myproject-aws-codepipeline-customer-service-terraform. This will create CodeCommit Repo, ECR Repo, CodeBuild Project, Lambda Function and CodePipeline Pipeline 
 - Create ELB Service Role if it doesnt exist yet
 ```
@@ -30,24 +29,23 @@ $ cd ~/environment
 $ git clone https://git-codecommit.ap-southeast-2.amazonaws.com/v1/repos/myproject-customer-service && cd ~/environment/myproject-customer-service
 ```
 
-- Follow folder structure as per https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/ and https://github.com/pallets/flask/tree/master/examples/tutorial
+- Follow folder structure as per https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/
 ```
 $ ~/environment/myproject-customer-service
 ├── flaskr/
+│   ├── __init__.py
 │   ├── app.py
-│   ├── auth.py
 │   ├── custom_logger.py
 │   ├── customer_routes.py
 │   ├── db.py
-│   ├── requirements.txt
-│   └── schema.tf
+│   └── requirements.txt
 ├── kubernetes/
 │   ├── deployment.yml
 │   └── service.yml
 ├── tests/
+│   ├── __init__.py
 │   ├── conftest.py
 │   ├── customers.json
-│   ├── test_auth_routes.py
 │   ├── test_customer_routes.py
 │   ├── test_curl.sh
 │   ├── test_db.py
@@ -59,8 +57,9 @@ $ ~/environment/myproject-customer-service
 └── README.md
 ```
 
-- Activate virtual environment, install flask and flask-cors
+- Activate virtual environment before installing flask, flask-cors and boto3
 ```bash
+$ cd ~/environment/myproject-customer-service/myproject-customer-service
 $ python3 -m venv venv
 $ source venv/bin/activate
 (venv) $ venv/bin/pip install flask flask-cors boto3
@@ -68,17 +67,23 @@ $ source venv/bin/activate
 ```
 
 ## Logging
-- Add custom logger ~/environment/myproject-customer-service/flaskr/custom_logger.py
+- Add custom logger                     ~/environment/myproject-customer-service/flaskr/custom_logger.py
 
 ## Development
-- Add static database ~/environment/myproject-customer-service/tests/customers.json
-- Add customer dynamodb table client ~/environment/myproject-customer-service/flaskr/customer_table_client.py
-- Add customer routes ~/environment/myproject-customer-service/flaskr/customer_routes.py
-- Add app ~/environment/myproject-customer-service/flaskr/app.py
 - You may also copy everything from Github repo to CodeCommit repo
 ```
 $ rsync -rv --exclude=.git ~/environment/myproject-customer-service-python/ ~/environment/myproject-customer-service/
 ```
+OR
+- Add application factory               ~/environment/myproject-customer-service/flaskr/__init__.py
+- Create the dynamodb table using       https://github.com/jrdalino/myproject-aws-dynamodb-customer-service-terraform
+- Add static database                   ~/environment/myproject-customer-service/tests/customers.json
+- Connect to the database               ~/environment/myproject-customer-service/flaskr/db.py
+
+- Add customer dynamodb table client    ~/environment/myproject-customer-service/flaskr/customer_table_client.py
+- Add customer routes                   ~/environment/myproject-customer-service/flaskr/customer_routes.py
+- Add app                               ~/environment/myproject-customer-service/flaskr/app.py
+
 
 ## Run
 - Run locally
@@ -98,13 +103,9 @@ $ cd ~/environment/myproject-customer-service/tests
 $ chmod a+x test_curl.sh
 $ ./test_curl.sh
 ```
-- Install pytest and coverage to test and measure your code
+- Install pytest and coverage to test and measure your code, pytest-flask and moto to mock your flask server and mock dynamodb 
 ```
-(venv) $ venv/bin/pip install pytest coverage
-```
-- Install pytest-flask and moto to mock your flask server and mock dynamodb 
-```
-(venv) $ venv/bin/pip install pytest-flask moto
+(venv) $ venv/bin/pip install pytest coverage pytest-flask moto
 ```
 - Add static database ~/environment/myproject-customer-service/tests/customers.json
 - Add tests for factory ~/environment/myproject-customer-service/tests/test_factory.py
