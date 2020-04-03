@@ -87,8 +87,8 @@ def create_customer(customer_dict):
 	userName = str(customer_dict['userName'])
 	birthDate = str(customer_dict['birthDate'])
 	gender = str(customer_dict['gender'])
-	custNumber = str(customer_dict['custNumber']) # generate randon custNumber
-	cardNumber = str(customer_dict['cardNumber']) # generate random, cardNumber
+	custNumber = "0999962019111901" # str(customer_dict['custNumber']) # generate unique custNumber
+	cardNumber = "6236332019111900001" # str(customer_dict['cardNumber']) # generate unique cardNumber
 	phoneNumber = str(customer_dict['phoneNumber'])
 	createdDate = str(datetime.datetime.now().isoformat())
 	updatedDate = "1900-01-01T00:00:00.000000"
