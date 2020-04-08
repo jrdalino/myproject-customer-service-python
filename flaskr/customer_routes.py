@@ -89,8 +89,9 @@ def delete_customer(customerId):
 
 @customer_module.errorhandler(400)
 def bad_request(e):
+    logger.error(e)
     # note that we set the 400 status explicitly
-    errorResponse = json.dumps({'customers': {
+    errorResponse = json.dumps({'customer': {
         'data': {},
         'status': 'Bad request'
         }})
