@@ -21,6 +21,7 @@ logger = setup_logger(__name__)
 table_name = 'customers'
 
 def get_all_customers():
+
 	dynamodb = get_db_client()
 	response = dynamodb.scan(
 		TableName=table_name
@@ -79,7 +80,7 @@ def get_customer(customerId):
 	return json.dumps({'customer': customer})
 
 def create_customer(customer_dict):
-	dynamodb = get_db_client()
+	
 	customerId = str(uuid.uuid4())
 	firstName = str(customer_dict['firstName'])
 	lastName = str(customer_dict['lastName'])
@@ -93,68 +94,81 @@ def create_customer(customer_dict):
 	createdDate = str(datetime.datetime.now().isoformat())
 	updatedDate = "1900-01-01T00:00:00.000000"
 	profilePhotoUrl = str(customer_dict['profilePhotoUrl'])
-	response = dynamodb.put_item(
-		TableName=table_name,
-		Item={
-				'customerId': {
-					'S': customerId
-				},
-				'firstName': {
-					'S' : firstName
-				},
-				'lastName': {
-					'S' : lastName
-				},                
-				'email' : {
-					'S' : email
-				},
-				'userName' : {
-					'S' : userName
-				},
-				'birthDate': {
-					'S' : birthDate
-				},
-				'gender': {
-					'S' : gender
-				},
-				'custNumber': {
-					'S' : custNumber
-				},
-				'cardNumber': {
-					'S' : cardNumber
-				},
-				'phoneNumber': {
-					'S' : phoneNumber
-				},
-				'createdDate': {
-					'S' : createdDate
-				},
-				'updatedDate': {
-					'S' : updatedDate
-				},
-				'profilePhotoUrl': {
-					'S' : profilePhotoUrl
-				}				
-			}
-		)
-	# logger.info("Logger Response: ")
-	# logger.info(response)
-	customer = {
-		'customerId': customerId,
-		'firstName': firstName,
-		'lastName': lastName,
-		'email': email,
-		'userName': userName,
-		'birthDate': birthDate,
-		'gender': gender,
-		'custNumber': custNumber,
-		'cardNumber': cardNumber,
-		'phoneNumber': phoneNumber,
-		'createdDate': createdDate,
-		'updatedDate': updatedDate,
-		'profilePhotoUrl': profilePhotoUrl,
-	}
-	return json.dumps({'customer': customer})
+
+	# check if is_unique
+	unique = is_unique(email, userName, custNumber, cardNumber)
+	
+	if len(unique) == 0:
+
+		dynamodb = get_db_client()
+		response = dynamodb.put_item(
+			TableName=table_name,
+			Item={
+					'customerId': {
+						'S': customerId
+					},
+					'firstName': {
+						'S' : firstName
+					},
+					'lastName': {
+						'S' : lastName
+					},                
+					'email' : {
+						'S' : email
+					},
+					'userName' : {
+						'S' : userName
+					},
+					'birthDate': {
+						'S' : birthDate
+					},
+					'gender': {
+						'S' : gender
+					},
+					'custNumber': {
+						'S' : custNumber
+					},
+					'cardNumber': {
+						'S' : cardNumber
+					},
+					'phoneNumber': {
+						'S' : phoneNumber
+					},
+					'createdDate': {
+						'S' : createdDate
+					},
+					'updatedDate': {
+						'S' : updatedDate
+					},
+					'profilePhotoUrl': {
+						'S' : profilePhotoUrl
+					}				
+				}
+			)
+		# logger.info("Logger Response: ")
+		# logger.info(response)
+		customer = {
+			'customerId': customerId,
+			'firstName': firstName,
+			'lastName': lastName,
+			'email': email,
+			'userName': userName,
+			'birthDate': birthDate,
+			'gender': gender,
+			'custNumber': custNumber,
+			'cardNumber': cardNumber,
+			'phoneNumber': phoneNumber,
+			'createdDate': createdDate,
+			'updatedDate': updatedDate,
+			'profilePhotoUrl': profilePhotoUrl,
+		}
+		return json.dumps({'customer': customer})
+
+	else: 
+
+		return json.dumps({'customer': 'The following values already exist in the database{}'.format(unique)})
+
+
 
 def update_customer(customerId, customer_dict):
 	dynamodb = get_db_client()
@@ -252,6 +266,89 @@ def delete_customer(customerId):
 		'customerId' : customerId,
 	}
 	return json.dumps({'customer': customer})
+
+
+def is_unique(email, userName, custNumber, cardNumber):
+	"""
+	Checks if email, userName, custNumber, cardNumber are unique
+	"""
+	dynamodb = get_db_client()
+
+	response = dynamodb.scan(
+		TableName=table_name,
+		Select='SPECIFIC_ATTRIBUTES',
+	 	AttributesToGet=[
+        'email',
+        'userName',
+        'custNumber',
+        'cardNumber'
+    ],
+		ScanFilter={
+			'email' : {
+				'AttributeValueList': [
+					{
+						'S': email
+					}
+				],
+				'ComparisonOperator': 'EQ'
+			},
+			'userName' : {
+				'AttributeValueList': [
+					{
+						'S': userName
+					}
+				],
+				'ComparisonOperator': 'EQ'
+			},
+			'custNumber' : {
+				'AttributeValueList': [
+					{
+						'S': custNumber
+					}
+				],
+				'ComparisonOperator': 'EQ'
+			},
+			'cardNumber' : {
+				'AttributeValueList': [
+					{
+						'S': cardNumber
+					}
+				],
+				'ComparisonOperator': 'EQ'
+			},
+		},
+		ConsistentRead=True,
+	)
+
+	duplicate_fields = []
+
+	logger.info(response)
+
+	if len(response['Items']) == 0: 
+
+		return duplicate_fields
+	
+	else: 
+
+		if response['Items'][0]['email']['S'] == email:
+
+			duplicate_fields.append('email')
+
+		if response['Items'][0]['userName']['S'] == userName:
+
+			duplicate_fields.append('userName')
+
+		if response['Items'][0]['custNumber']['S'] == custNumber:
+
+			duplicate_fields.append('custNumber')
+
+		if response['Items'][0]['cardNumber']['S'] == cardNumber:
+
+			duplicate_fields.append('cardNumber')
+
+	return duplicate_fields
+
+
 
 def customer_number_generator():
 	now = datetime.datetime.now()
