@@ -8,14 +8,17 @@ import uuid
 import datetime
 from datetime import date
 
+from boto3.dynamodb.conditions import Key, Attr
+
 if __package__ is None or __package__ == '':
 	# uses current directory visibility
 	from custom_logger import setup_logger
-	from db import get_db_client
+	from db import get_db_client, get_db_resource
 else:
 	# uses current package visibility
 	from flaskr.custom_logger import setup_logger
-	from flaskr.db import get_db_client
+	from flaskr.db import get_db_client, get_db_resource
+
 
 logger = setup_logger(__name__)
 table_name = 'customers'
@@ -88,8 +91,8 @@ def create_customer(customer_dict):
 	userName = str(customer_dict['userName'])
 	birthDate = str(customer_dict['birthDate'])
 	gender = str(customer_dict['gender'])
-	custNumber = "0999962019111901" # str(customer_dict['custNumber']) # generate unique custNumber
-	cardNumber = "6236332019111900001" # str(customer_dict['cardNumber']) # generate unique cardNumber
+	custNumber = customer_number_generator()
+	cardNumber = card_number_generator()
 	phoneNumber = str(customer_dict['phoneNumber'])
 	createdDate = str(datetime.datetime.now().isoformat())
 	updatedDate = "1900-01-01T00:00:00.000000"
@@ -97,7 +100,7 @@ def create_customer(customer_dict):
 
 	# check if is_unique
 	unique = is_unique(email, userName, custNumber, cardNumber)
-	
+		
 	if len(unique) == 0:
 
 		dynamodb = get_db_client()
@@ -166,7 +169,7 @@ def create_customer(customer_dict):
 
 	else: 
 
-		return json.dumps({'customer': 'The following values already exist in the database{}'.format(unique)})
+		return json.dumps({'customer': 'The following values already exist in the database {}'.format(unique)})
 
 
 
@@ -178,10 +181,7 @@ def update_customer(customerId, customer_dict):
 	userName = str(customer_dict['userName'])
 	birthDate = str(customer_dict['birthDate'])
 	gender = str(customer_dict['gender'])
-	# custNumber = str(customer_dict['custNumber'])
-	# cardNumber = str(customer_dict['cardNumber'])
 	phoneNumber = str(customer_dict['phoneNumber'])
-	# createdDate = str(customer_dict['createdDate'])
 	updatedDate = str(datetime.datetime.now().isoformat())
 	profilePhotoUrl = str(customer_dict['profilePhotoUrl'])
 	response = dynamodb.update_item(
@@ -241,10 +241,10 @@ def update_customer(customerId, customer_dict):
 		'userName': userName,
 		'birthDate': birthDate,
 		'gender': gender,
-		# 'custNumber': custNumber,
-		# 'cardNumber': cardNumber,
+		'custNumber': custNumber,
+		'cardNumber': cardNumber,
 		'phoneNumber': phoneNumber,
-		# 'createdDate': createdDate,
+		'createdDate': createdDate,
 		'updatedDate': updatedDate,
 		'profilePhotoUrl': profilePhotoUrl,
 	}
@@ -271,58 +271,25 @@ def delete_customer(customerId):
 def is_unique(email, userName, custNumber, cardNumber):
 	"""
 	Checks if email, userName, custNumber, cardNumber are unique
+	Will return a list do duplicate fields
 	"""
-	dynamodb = get_db_client()
+	dynamodb = get_db_resource()
 
-	response = dynamodb.scan(
-		TableName=table_name,
-		Select='SPECIFIC_ATTRIBUTES',
-	 	AttributesToGet=[
-        'email',
-        'userName',
-        'custNumber',
-        'cardNumber'
-    ],
-		ScanFilter={
-			'email' : {
-				'AttributeValueList': [
-					{
-						'S': email
-					}
-				],
-				'ComparisonOperator': 'EQ'
-			},
-			'userName' : {
-				'AttributeValueList': [
-					{
-						'S': userName
-					}
-				],
-				'ComparisonOperator': 'EQ'
-			},
-			'custNumber' : {
-				'AttributeValueList': [
-					{
-						'S': custNumber
-					}
-				],
-				'ComparisonOperator': 'EQ'
-			},
-			'cardNumber' : {
-				'AttributeValueList': [
-					{
-						'S': cardNumber
-					}
-				],
-				'ComparisonOperator': 'EQ'
-			},
-		},
+	table = dynamodb.Table(table_name)
+
+	filter_expression = Attr('email').eq(email) \
+		| Attr('userName').eq(userName) \
+		| Attr('custNumber').eq(custNumber) \
+		| Attr('cardNumber').eq(cardNumber)
+
+	response = table.scan(
+		Select='ALL_ATTRIBUTES',
+		FilterExpression=filter_expression,
 		ConsistentRead=True,
 	)
 
-	duplicate_fields = []
 
-	logger.info(response)
+	duplicate_fields = []
 
 	if len(response['Items']) == 0: 
 
@@ -330,34 +297,84 @@ def is_unique(email, userName, custNumber, cardNumber):
 	
 	else: 
 
-		if response['Items'][0]['email']['S'] == email:
+		if response['Items'][0]['email'] == email:
 
-			duplicate_fields.append('email')
+			duplicate_fields.append('email : {}'.format(email))
 
-		if response['Items'][0]['userName']['S'] == userName:
+		if response['Items'][0]['userName'] == userName:
 
-			duplicate_fields.append('userName')
+			duplicate_fields.append('userName : {}'.format(userName))
 
-		if response['Items'][0]['custNumber']['S'] == custNumber:
+		if response['Items'][0]['custNumber'] == custNumber:
 
-			duplicate_fields.append('custNumber')
+			duplicate_fields.append('custNumber : {}'.format(custNumber))
 
-		if response['Items'][0]['cardNumber']['S'] == cardNumber:
+		if response['Items'][0]['cardNumber'] == cardNumber:
 
-			duplicate_fields.append('cardNumber')
+			duplicate_fields.append('cardNumber : {}'.format(cardNumber))
 
 	return duplicate_fields
 
 
 
+def get_max_value(attribute):
+
+	"""Will scan the table for the maximum possible value given an attribute"""
+
+	dynamodb = get_db_client()
+
+	maximum = None
+
+	response = dynamodb.scan(
+		TableName=table_name,
+		Select='SPECIFIC_ATTRIBUTES',
+	 	AttributesToGet=[
+	 		attribute
+	  ],
+		ConsistentRead=True,
+	)
+
+	if response['Items'] == []: 
+		pass
+	else: 
+
+		maximum = max([int(m[attribute]['S']) for m in response['Items']])
+
+	return maximum
+
+
 def customer_number_generator():
 	now = datetime.datetime.now()
-	# get latest id from db and increment
-	new_customer_number = '099996' + str(now.year) + str(now.month) + str(now.day) + '01'
+
+	max_value = get_max_value('custNumber')
+
+	if max_value: 
+		# get latest id from db and increment
+		# get last 2 digits
+		last_digits = str(max_value)[-2:]
+		logger.info("last digits")
+		logger.info(last_digits)
+		new_customer_number = '099996' + str(now.year) + str(now.month) + str(now.day) + str(int(last_digits) + 1).zfill(2)
+
+	else: 
+
+		new_customer_number = '099996' + str(now.year) + str(now.month) + str(now.day) + '01'
+
 	return new_customer_number
 
 def card_number_generator():
 	now = datetime.datetime.now()
-	# get latest id from db and increment
-	new_card_number = '623633' + str(now.year) + str(now.month) + str(now.day) + '00001'
+
+	max_value = get_max_value('cardNumber')
+
+	if max_value: 
+		# get last 5 digits
+		last_digits = str(max_value)[-5:]
+			
+		new_card_number = '623633' + str(now.year) + str(now.month) + str(now.day) + str(int(last_digits) + 1).zfill(5)
+
+	else: 
+
+		new_card_number = '623633' + str(now.year) + str(now.month) + str(now.day) + '00001'
+
 	return new_card_number
