@@ -5,3 +5,9 @@ def get_db_client():
 				region_name='ap-southeast-2',
 		)
 		return dynamodb
+
+def get_db_resource():
+		dynamodb = boto3.resource('dynamodb', 
+				region_name='ap-southeast-2',
+		)
+		return dynamodb
