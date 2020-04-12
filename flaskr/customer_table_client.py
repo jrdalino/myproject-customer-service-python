@@ -99,7 +99,7 @@ def create_customer(customer_dict):
 	profilePhotoUrl = str(customer_dict['profilePhotoUrl'])
 
 	# check if is_unique
-	unique = is_unique(email, userName, custNumber, cardNumber)
+	unique = is_unique(customerId, email, userName, custNumber, cardNumber)
 		
 	if len(unique) == 0:
 
@@ -172,7 +172,6 @@ def create_customer(customer_dict):
 		return json.dumps({'customer': 'The following values already exist in the database {}'.format(unique)})
 
 
-
 def update_customer(customerId, customer_dict):
 	dynamodb = get_db_client()
 	firstName = str(customer_dict['firstName'])
@@ -229,24 +228,27 @@ def update_customer(customerId, customer_dict):
 			':p_profilePhotoUrl': {
 				'S' : profilePhotoUrl
 			}
-		}
+		},
+		ReturnValues="ALL_NEW"
 	)
 	# logger.info("Logger Response: ")
 	# logger.info(response)
+	updated = response['Attributes']
+
 	customer = {
-		'customerId': customerId,
-		'firstName': firstName,
-		'lastName': lastName,
-		'email': email,
-		'userName': userName,
-		'birthDate': birthDate,
-		'gender': gender,
-		'custNumber': custNumber,
-		'cardNumber': cardNumber,
-		'phoneNumber': phoneNumber,
-		'createdDate': createdDate,
-		'updatedDate': updatedDate,
-		'profilePhotoUrl': profilePhotoUrl,
+		'customerId': updated['customerId']['S'],
+		'firstName': updated['firstName']['S'],
+		'lastName': updated['lastName']['S'],
+		'email': updated['email']['S'],
+		'userName': updated['userName']['S'],
+		'birthDate': updated['birthDate']['S'],
+		'gender': updated['gender']['S'],
+		'custNumber': updated['custNumber']['S'],
+		'cardNumber': updated['cardNumber']['S'],
+		'phoneNumber': updated['phoneNumber']['S'],
+		'createdDate': updated['createdDate']['S'],
+		'updatedDate': updated['updatedDate']['S'],
+		'profilePhotoUrl': updated['profilePhotoUrl']['S'],
 	}
 	return json.dumps({'customer': customer})
 
@@ -268,7 +270,7 @@ def delete_customer(customerId):
 	return json.dumps({'customer': customer})
 
 
-def is_unique(email, userName, custNumber, cardNumber):
+def is_unique(customerId, email, userName, custNumber, cardNumber):
 	"""
 	Checks if email, userName, custNumber, cardNumber are unique
 	Will return a list do duplicate fields
@@ -277,7 +279,8 @@ def is_unique(email, userName, custNumber, cardNumber):
 
 	table = dynamodb.Table(table_name)
 
-	filter_expression = Attr('email').eq(email) \
+	filter_expression = Attr('customerId').eq(customerId) \
+		| Attr('email').eq(email) \
 		| Attr('userName').eq(userName) \
 		| Attr('custNumber').eq(custNumber) \
 		| Attr('cardNumber').eq(cardNumber)
@@ -296,6 +299,10 @@ def is_unique(email, userName, custNumber, cardNumber):
 		return duplicate_fields
 	
 	else: 
+
+		if response['Items'][0]['customerId'] == customerId:
+
+			duplicate_fields.append('customerId : {}'.format(customerId))
 
 		if response['Items'][0]['email'] == email:
 
