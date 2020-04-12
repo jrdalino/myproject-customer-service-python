@@ -234,7 +234,6 @@ def update_customer(customerId, customer_dict):
 	# logger.info("Logger Response: ")
 	# logger.info(response)
 	updated = response['Attributes']
-
 	customer = {
 		'customerId': updated['customerId']['S'],
 		'firstName': updated['firstName']['S'],
