@@ -1,7 +1,7 @@
 import logging
 
 def setup_logger(name):
-    formatter = logging.Formatter(fmt='[%(levelname)s][{}] %(asctime)s:%(threadName)s:%(message)s'.format(name), datefmt='%Y-%m-%d %H:%M:%S')
+    formatter = logging.Formatter(fmt='[%(levelname)s][{}] %(asctime)s:%(threadName)s:%(lineno)d:%(message)s'.format(name), datefmt='%Y-%m-%d %H:%M:%S')
 
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)

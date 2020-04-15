@@ -29,4 +29,4 @@ spec:
           protocol: TCP
         env:
         - name: AWS_XRAY_DAEMON_ADDRESS
-          value: xray-service.default
+          value: xray-service.default.svc.cluster.local:2000

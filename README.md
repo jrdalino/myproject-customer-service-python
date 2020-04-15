@@ -69,6 +69,58 @@ $ source venv/bin/activate
 ## Logging
 - Add custom logger                     ~/environment/myproject-customer-service/flaskr/custom_logger.py
 
+## Local Development
+- Setup Local DynamoDB
+```
+$ docker pull amazon/dynamodb-local
+$ docker run -p 8000:8000 amazon/dynamodb-local
+```
+- Create Local DynamoDB Table
+```
+$ aws dynamodb create-table \
+--cli-input-json file://~/environment/customers-table-schema.json \
+--endpoint-url http://localhost:8000 
+```
+```
+{
+  "TableName": "customers",
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 5,
+    "WriteCapacityUnits": 5
+  },
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "customerId",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "customerId",
+      "KeyType": "HASH"
+    }
+  ],
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "name_index",
+      "KeySchema": [
+        {
+          "AttributeName": "customerId",
+          "KeyType": "HASH"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": {
+        "ReadCapacityUnits": 5,
+        "WriteCapacityUnits": 5
+      }
+    }
+  ]
+}
+```
+
 ## Development
 - You may also copy everything from Github repo to CodeCommit repo
 ```
@@ -145,6 +197,37 @@ $ $(aws ecr get-login --no-include-email)
 $ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
 $ aws ecr describe-images --repository-name myproject-customer-service
 ```
+
+## Run and Test Locally
+```
+$ docker-compose up
+```
+```
+version: '3'
+services:
+  # https://github.com/aws-samples/aws-sam-java-rest/issues/1
+  dynamo-db:
+    image: amazon/dynamodb-local
+    ports:
+      - '8000:8000'
+    volumes:
+      - dynamodb_data:/home/dynamodblocal
+    working_dir: /home/dynamodblocal
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ."
+
+  api:
+    build: .
+    volumes:
+      - ./flaskr:/flaskr
+    ports:
+      - '5000:5000'
+    links: 
+      - dynamo-db
+volumes:
+  dynamodb_data:
+```
+
+## Change Database to DynamoDB on AWS
 
 ## Pre-Deployment
 - Add .gitignore file ~/environment/myproject-customer-service/.gitignore

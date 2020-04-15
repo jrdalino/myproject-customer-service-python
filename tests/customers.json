@@ -5,15 +5,15 @@
     "lastName" : "Whittam",
     "email" : "bwhittam0@cpanel.net",
     "userName" : "bwhittam0@cpanel.net",
-    "birthDate" : "December 31, 1999",
+    "birthDate" : "1900-01-01T00:00:00.000000",
     "gender" : "Male",
     "custNumber" : "0999962019111901",
     "cardNumber" : "6236332019111900010",
+    "custAccountNo" : "0000000000000000000000",
     "phoneNumber" : "97667321",
-    "createdDate": "March 27, 2020",
-    "updatedDate": "March 27, 2020",
+    "createdDate": "1900-01-01T00:00:00.000000",
+    "updatedDate": "1900-01-01T00:00:00.000000",
     "profilePhotoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/600px-PICA.jpg"
-
   },
   {
     "customerId" : "2b473002-36f8-4b87-954e-9a377e0ccbec",
@@ -21,13 +21,14 @@
     "lastName" : "Plumley",
     "email" : "eplumley1@wikipedia.org",
     "userName" : "eplumley1@wikipedia.org",
-    "birthDate" : "January 1, 2000",
+    "birthDate" : "1900-01-01T00:00:00.000000",
     "gender" : "Female",
     "custNumber" : "0999962019111902",
     "cardNumber" : "6236332019111900012",
+    "custAccountNo" : "0000000000000000000000",        
     "phoneNumber" : "97667322",
-    "createdDate": "March 27, 2020",
-    "updatedDate": "March 27, 2020",
+    "createdDate": "1900-01-01T00:00:00.000000",
+    "updatedDate": "1900-01-01T00:00:00.000000",
     "profilePhotoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/600px-PICA.jpg"
   },
   {
@@ -36,13 +37,14 @@
     "lastName" : "Dafter",
     "email" : "ldafter2@ucsd.edu",
     "userName" : "ldafter2@ucsd.edu",
-    "birthDate" : "June 15, 1980",
+    "birthDate" : "1900-01-01T00:00:00.000000",
     "gender" : "Male",
     "custNumber" : "0999962019111903",
     "cardNumber" : "6236332019111900013",
+    "custAccountNo" : "0000000000000000000000",        
     "phoneNumber" : "97667323",
-    "createdDate": "March 27, 2020",
-    "updatedDate": "March 27, 2020",
+    "createdDate": "1900-01-01T00:00:00.000000",
+    "updatedDate": "1900-01-01T00:00:00.000000",
     "profilePhotoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/600px-PICA.jpg"
   }
 ]

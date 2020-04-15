@@ -4,6 +4,10 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
+# Import the X-Ray modules
+from aws_xray_sdk.core import xray_recorder, patch_all
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+
 # Add new blueprints here
 if __package__ is None or __package__ == '':
     # uses current directory visibility
@@ -16,6 +20,13 @@ def create_app(test_config=None):
 	# create and configure the app
 	app = Flask(__name__, instance_relative_config=True)
 	CORS(app)
+
+	# AWS X-Ray
+	plugins = ('EC2Plugin', 'ECSPlugin')
+	xray_recorder.configure(service='myproject-customer-service',plugins=plugins)
+	XRayMiddleware(app, xray_recorder)
+	patch_all()
+
 	app.config.from_mapping(
 		SECRET_KEY="dev",
 		DATABASE="sample://db-string"
