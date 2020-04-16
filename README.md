@@ -37,6 +37,7 @@ $ ~/environment/myproject-customer-service
 │   ├── app.py
 │   ├── custom_logger.py
 │   ├── customer_routes.py
+│   ├── customer_table_client.py
 │   ├── db.py
 │   └── requirements.txt
 ├── kubernetes/
@@ -44,10 +45,9 @@ $ ~/environment/myproject-customer-service
 │   └── service.yml
 ├── tests/
 │   ├── __init__.py
-│   ├── conftest.py
 │   ├── customers.json
-│   ├── test_customer_routes.py
 │   ├── test_curl.sh
+│   ├── test_customer_routes.py
 │   ├── test_db.py
 │   └── test_factory.py
 ├── venv/
@@ -62,12 +62,12 @@ $ ~/environment/myproject-customer-service
 $ cd ~/environment/myproject-customer-service/myproject-customer-service
 $ python3 -m venv venv
 $ source venv/bin/activate
-(venv) $ venv/bin/pip install flask flask-cors boto3
+(venv) $ venv/bin/pip install flask flask-cors boto3 aws-xray-sdk
 (venv) $ deactivate # To deactivate
 ```
 
 ## Logging
-- Add custom logger                     ~/environment/myproject-customer-service/flaskr/custom_logger.py
+- Add custom logger ~/environment/myproject-customer-service/flaskr/custom_logger.py
 
 ## Local Development
 - Setup Local DynamoDB
@@ -141,8 +141,7 @@ OR
 - Run locally
 ```bash
 $ cd flaskr
-$ chmod a+x app.py
-$ ./app.py
+$ python app.py
 $ curl http://localhost:5000
 ```
 

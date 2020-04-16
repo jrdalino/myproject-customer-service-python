@@ -3,7 +3,7 @@
 # replace variables
 hostname=localhost
 port=5000
-customerId=0431af2b-71a5-4452-9600-7b26886d9b07
+customerId=c36262f5-61d9-484c-ae4a-4a8587980965
 
 echo "test create a new customer"
 echo "--------------------------"
@@ -45,15 +45,15 @@ curl -X PUT \
   http://$hostname:$port/customers/$customerId \
   -H 'Content-Type: application/json' \
   -d '{
-  "firstName":"New Customer First Name v2",
-  "lastName": "New Customer Last Name v2",
-  "email": "first.last.v2@example.com",
-  "userName": "first.last.v2@example.com", 
-  "birthDate": "1972-12-31T00:00:00.000000",    
-  "gender": "Female",
+  "firstName":"New Customer First Name v3",
+  "lastName": "New Customer Last Name v3",
+  "email": "first.last.v3@example.com",
+  "userName": "first.last.v3@example.com", 
+  "birthDate": "1973-12-31T00:00:00.000000",    
+  "gender": "Male",
   "phoneNumber" : "12345678",
-  "custAccountNo" : "0000000000000000000001",
-	"profilePhotoUrl": "http://example.com/helloV2.jpeg"
+  "custAccountNo" : "0000000000000000000003",
+	"profilePhotoUrl": "http://example.com/helloV3.jpeg"
 }'
 echo
 echo
