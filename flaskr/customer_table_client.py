@@ -86,7 +86,7 @@ def get_customer(customerId):
 	return json.dumps({'customer': customer})
 
 def create_customer(customer_dict):
-	customerId = str(uuid.uuid4())
+	customerId = str(customer_dict['userName']) # str(uuid.uuid4())
 	firstName = str(customer_dict['firstName'])
 	lastName = str(customer_dict['lastName'])
 	email = str(customer_dict['email'])
