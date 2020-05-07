@@ -182,7 +182,7 @@ $ pip freeze > requirements.txt
 ```bash
 $ cd ~/environment/myproject-customer-service
 $ docker build -t myproject-customer-service .
-$ docker tag myproject-customer-service:latest 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
+$ docker tag myproject-customer-service:latest 707538076348.dkr.ecr.ap-southeast-1.amazonaws.com/myproject-customer-service:latest
 $ docker run -e AWS_ACCESS_KEY_ID=<REPLACE_ME> -e AWS_SECRET_ACCESS_KEY=<REPLACE_ME> -d -p 5000:5000 myproject-customer-service:latest
 $ curl http://localhost:5000
 ```
@@ -193,7 +193,7 @@ $ aws ecr create-repository --repository-name myproject-customer-service
 - Push Docker Image to ECR and validate
 ```bash
 $ $(aws ecr get-login --no-include-email)
-$ docker push 222337787619.dkr.ecr.ap-southeast-2.amazonaws.com/myproject-customer-service:latest
+$ docker push 707538076348.dkr.ecr.ap-southeast-1.amazonaws.com/myproject-customer-service:latest
 $ aws ecr describe-images --repository-name myproject-customer-service
 ```
 
