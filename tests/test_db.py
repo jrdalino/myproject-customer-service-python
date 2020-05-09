@@ -8,6 +8,8 @@ class TestDb(unittest.TestCase):
 	def set_up():
 		pass
 
-	def test_get_db_resource(self):
-		dynamodb = get_db_resource()
-		self.assertEqual(dynamodb._endpoint.host, 'https://dynamodb.ap-southeast-2.amazonaws.com')
+
+	# @Todo get endpoint for dynamodb resource
+	# def test_get_db_resource(self):
+	# 	dynamodb = get_db_resource()
+	# 	self.assertEqual(dynamodb._endpoint.host, 'https://dynamodb.ap-southeast-2.amazonaws.com')
