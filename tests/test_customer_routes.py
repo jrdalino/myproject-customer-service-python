@@ -115,15 +115,18 @@ class TestDynamo(unittest.TestCase):
 				# check if the data key matches the updated customer object
 				self.assertEqual(json.loads(customer)['customer'], json.loads(customerGet)['customer'])
 
-		# @mock_dynamodb2
-		# def test_delete_customer(self):
-		# 		self.__moto_dynamodb_setup()
-		# 		customer = delete_customer(self.test_delete_customer_id)
-		# 		# check if the status is DELETED OK
-		# 		self.assertEqual(json.loads(customer)['customers']['status'], "DELETED OK")
-		# 		deletedId = json.loads(customer)['customers']['data']['customerId']
-		# 		customerGet = get_customer(deletedId)
-		# 		# check if the customerId matches the deleted object
-		# 		self.assertEqual(deletedId, self.test_delete_customer_id)
-		# 		# check if the customer exists will fail if existing
-		# 		self.assertEqual(json.loads(customerGet)['customers']['status'], "Customer not found")
+		@mock_dynamodb2
+		def test_delete_customer(self):
+				self.__moto_dynamodb_setup()
+				customer = delete_customer(self.test_delete_customer_id)
+				deletedId = json.loads(customer)['customer']['customerId']
+
+				# check if the customerId matches the deleted object
+				self.assertEqual(deletedId, self.test_delete_customer_id)
+
+				# check if the customer exists will fail if existing
+				# Expected: should throw exception CustomerNotFound
+				with self.assertRaises(Exception) as context:
+					customerGet = get_customer(deletedId)
+
+				self.assertTrue('CustomerNotFound' in str(context.exception))
